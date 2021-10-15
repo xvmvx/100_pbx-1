@@ -1,0 +1,59 @@
+CentOS Linux-7:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - python36-m2crypto
+    - python36-psutil
+    - swig
+  locale: en_US.utf8
+Issabel PBX-7:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - python36-m2crypto
+    - python36-psutil
+    - swig
+  locale: en_US.utf8
+CentOS Linux-8:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - python3-m2crypto
+    - python3-psutil
+    - swig
+Sangoma Linux-7:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - swig
+    - openssl-devel
+    - python36u-devel
+    - gcc
+  pypi_pkgs:
+    - M2Crypto
+    - psutil
+  locale: en_US.UTF-8
+Ubuntu-18.04:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - swig
+    - gcc
+    - libssl-dev
+    - python3-psutil
+  pypi_pkgs:
+    - M2Crypto
+Debian-10:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - swig
+    - python3-psutil
+  pypi_pkgs:
+    - M2Crypto

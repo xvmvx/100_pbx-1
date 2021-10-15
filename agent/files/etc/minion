@@ -1,0 +1,62 @@
+# Options from minion_*.conf in Salt config directory take precedence
+include: 'minion_*.conf'
+
+master: localhost
+
+clean_dynamic_modules: False # Do not clean contents of extension_modules
+
+# Only load these modules.
+whitelist_modules_not_working_for_now:
+  - odoo
+  - asterisk
+  - cmd
+  - config
+  - cp
+  - event
+  - grains
+  - log
+  - mine
+  - pillar
+  - saltutil
+  - state
+  - sys
+  - test
+  - timezone
+
+# Execute startup
+startup_states: sls
+sls_list:
+  - security
+
+engines:
+  - reactor
+  - asterisk_ami
+  - asterisk_fastagi
+  - asterisk_cli
+  - odoo_executor
+
+# Logging
+log_level: info
+log_file: file:///dev/log/LOG_LOCAL0
+log_fmt_logfile: '[%(levelname)-8s] %(name)s:%(lineno)s %(message)s'
+log_fmt_console: '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s'
+state_output: mixed
+
+# Reactor
+reactor_niceness: 9
+reactor_worker_threads: 64
+reactor:
+  - 'AMI/ChallengeSent':
+      - /etc/salt/reactor/ipset_expire.sls
+  - 'AMI/SuccessfulAuth':
+      - /etc/salt/reactor/ipset_authed.sls
+  - 'AMI/InvalidPassword':
+      - /etc/salt/reactor/ipset_banned.sls
+  - 'AMI/InvalidAccountID':
+      - /etc/salt/reactor/ipset_banned.sls
+  - 'AMI/ChallengeResponseFailed':
+      - /etc/salt/reactor/ipset_banned.sls
+
+autosign_grains:
+  - id
+  - partnercode

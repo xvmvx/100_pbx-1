@@ -1,0 +1,12 @@
+{% set odoo = salt['pillar.get']('odoo', {
+    'version': '14.0',
+    'dbname': salt['config.get']('odoo_db', 'demo'),
+    'user': 'odoo',
+    'admin_passwd': 'odoopbx',
+    'prefix': '/srv',
+    'upgrade': True,
+    },
+    merge=True,
+) %}
+
+{% do odoo.update({'major_version': odoo.version.split('.')[0]}) %}
