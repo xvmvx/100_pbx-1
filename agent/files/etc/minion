@@ -59,4 +59,4 @@ reactor:
 
 autosign_grains:
   - id
-  - partnercode
+  - odoopbx_auth

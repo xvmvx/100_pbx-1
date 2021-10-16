@@ -17,14 +17,19 @@ agent-pkg-reqs:
     - refresh: true
 {% endif %}
 
+agent-pip-panoramisk:
+  pip.installed:
+    - pkgs:
+      - https://github.com/litnimax/panoramisk/archive/master.zip
+    - unless:
+      - pip3 show panoramisk
+
 agent-pip-reqs:
   pip.installed:
     - pkgs:
-      - jsonrpcserver
       - aiorun
       - ipsetpy
       - OdooRPC
-      - https://github.com/litnimax/panoramisk/archive/master.zip
       - pastebin
       - setproctitle
       - terminado
@@ -57,3 +62,7 @@ agent-grains-update:
     - value:
         - '{{ salt['config.get']('fqdn') }}'
     - force: True
+
+agent-clean-master-pubkey:
+  file.absent:
+    - name: /etc/salt/pki/minion/minion_master.pub

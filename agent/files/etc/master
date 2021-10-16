@@ -9,7 +9,7 @@ log_file: file:///dev/log/LOG_LOCAL0
 log_fmt_logfile: '[%(levelname)-8s] %(name)s:%(lineno)s %(message)s'
 log_fmt_console: '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s'
 
-autosign_grains_dir: /etc/salt/autosign_grains
+autosign_grains_dir: /etc/salt/autosign
 
 external_auth:
   file:
