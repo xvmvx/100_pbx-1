@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User={{ user }}
-ExecStart=/srv/odoo/venv/odoo{{ major_version }}/bin/python /srv/odoo/src/odoo-{{ version }}/odoo-bin --config /etc/odoo/odoo{{ major_version }}.conf --syslog
+ExecStart={{ path.venv }}/bin/python {{ path.src }}/odoo-bin --config {{ path.conf }} --syslog
 Restart=on-failure
 RestartSec=10
 SyslogIdentifier=odoo
