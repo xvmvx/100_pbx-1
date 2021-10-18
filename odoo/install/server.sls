@@ -79,8 +79,8 @@ odoo-configs:
         - source: salt://odoo/templates/odoo.service
       - /etc/profile.d/odoo.sh:
         - contents: >
-            alias odoo=\'sudo -u odoo {{ odoo.path.venv }}/bin/python
-            {{ odoo.path.src }}/odoo-bin -c {{ odoo.path.conf }}\'
+            alias odoo='sudo -u odoo {{ odoo.path.venv }}/bin/python
+            {{ odoo.path.src }}/odoo-bin -c {{ odoo.path.conf }}'
     - user: root
     - mode: 644
     - template: jinja

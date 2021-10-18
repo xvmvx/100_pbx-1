@@ -124,7 +124,16 @@ class AmiClient:
         event['SystemName'] = __grains__['id']
         # Send event to Salt's event bus
         if event['Event'] in PASS_AMI_EVENTS:
-                self.event.fire_event(event, 'AMI/{}'.format(event['Event']))
+            self.event.fire_event(event, 'AMI/{}'.format(event['Event']))
+        # Check if it is a special OdooExecute UserEvent
+        if event['Event'] == 'UserEvent' and event['UserEvent'] == 'OdooExecute':
+            self.event.fire_event({
+                'model': event['model'],
+                'method': event['method'],
+                'args': json.loads(event['args']),
+                'kwargs': json.loads(event.get('kwargs', "{}")),
+            }, 'odoo_execute')
+            log.info('Event OdooExecute has been sent to Odoo')
         # Send the event to Odoo if required
         asyncio.ensure_future(self.send_event_to_odoo(event), loop=self.loop)
 
