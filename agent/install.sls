@@ -62,7 +62,3 @@ agent-grains-update:
     - value:
         - '{{ salt['config.get']('fqdn') }}'
     - force: True
-
-agent-clean-master-pubkey:
-  file.absent:
-    - name: /etc/salt/pki/minion/minion_master.pub

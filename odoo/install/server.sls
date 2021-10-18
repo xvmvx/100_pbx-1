@@ -19,54 +19,32 @@ virtualenv-installed:
 
 virtualenv-init:
   virtualenv.managed:
-    - name: /srv/odoo/venv/odoo{{ odoo.major_version }}
+    - name: {{ odoo.path.venv }}
     - python: python3
 
 odoo-pip-upgraded:
   cmd.run:
-    - name: /srv/odoo/venv/odoo{{ odoo.major_version }}/bin/pip3 install --upgrade pip
+    - name: {{ odoo.path.venv }}/bin/pip3 install --upgrade pip
     - reload_modules: true
     - require:
       - virtualenv-init
     - onfail:
       - odoo-pip-reqs
 
-odoo-group:
-  group.present:
-    - name: {{ odoo.user }}
-
 odoo-user:
   user.present:
     - name: {{ odoo.user }}
-    - groups:
-      - {{ odoo.user }}
+    - usergroup: True
     - shell: /bin/bash
 
-odoo-src-dir:
+odoo-make-dirs:
   file.directory:
-    - name: /srv/odoo/src/
+    - names:
+      - {{ odoo.path.data }}/filestore:
+        - user: {{ odoo.user }}
+      - {{ odoo.path.addons }}:
+        - group: {{ odoo.user }}
     - makedirs: True
-
-odoo-filestore-dir:
-  file.directory:
-    - name: /srv/odoo/data/filestore
-    - makedirs: True
-    - user: {{ odoo.user }}
-    - group: root
-    - dir_mode: 750
-
-odoo-addons-dir:
-  file.directory:
-    - name: /srv/odoo/addons/{{ odoo.version }}
-    - makedirs: True
-    - user: root
-    - group: {{ odoo.user }}
-    - dir_mode: 750
-
-odoo-etc-dir:
-  file.directory:
-    - name: /etc/odoo
-    - group: odoo
     - dir_mode: 750
 
 odoo-cloned:
@@ -76,15 +54,15 @@ odoo-cloned:
     - depth: 1
     - fetch_tags: False
     - rev: {{ odoo.version }}
-    - target: /srv/odoo/src/odoo-{{ odoo.version }}
+    - target: {{ odoo.path.src }}
     - require:
       - odoo-pkg-reqs
 
 odoo-pip-reqs:
   pip.installed:
     - upgrade: {{ odoo.upgrade }}
-    - requirements: /srv/odoo/src/odoo-{{ odoo.version }}/requirements.txt
-    - bin_env: /srv/odoo/venv/odoo{{ odoo.major_version }}
+    - requirements: {{ odoo.path.src }}/requirements.txt
+    - bin_env: {{ odoo.path.venv }}
     - require:
       - odoo-cloned
     - retry: True
@@ -92,17 +70,17 @@ odoo-pip-reqs:
 odoo-configs:
   file.managed:
     - names:
-      - /etc/odoo/odoo{{ odoo.major_version }}.conf:
+      - {{ odoo.path.conf }}:
         - source: salt://odoo/templates/odoo.conf
         - group: {{ odoo.user }}
         - mode: 640
+        - makedirs: True
       - /etc/systemd/system/odoo{{ odoo.major_version }}.service:
         - source: salt://odoo/templates/odoo.service
       - /etc/profile.d/odoo.sh:
         - contents: >
-            alias odoo="sudo -u odoo /srv/odoo/venv/odoo{{ odoo.major_version }}/bin/python
-            /srv/odoo/src/odoo-{{ odoo.version }}/odoo-bin
-            -c /etc/odoo/odoo{{ odoo.major_version }}.conf"
+            alias odoo=\'sudo -u odoo {{ odoo.path.venv }}/bin/python
+            {{ odoo.path.src }}/odoo-bin -c {{ odoo.path.conf }}\'
     - user: root
     - mode: 644
     - template: jinja
@@ -130,13 +108,13 @@ odoo-dbuser:
 odoo-init:
   cmd.run:
     - name: >
-        /srv/odoo/venv/odoo{{ odoo.major_version }}/bin/python /srv/odoo/src/odoo-{{ odoo.version }}/odoo-bin 
-        --config /etc/odoo/odoo{{ odoo.major_version }}.conf --no-http --stop-after-init  -i base
+        {{ odoo.path.venv }}/bin/python {{ odoo.path.src }}/odoo-bin
+        --config {{ odoo.path.conf }} --no-http --stop-after-init  -i base
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - unless: >
         echo "env['res.users']" | 
-        /srv/odoo/venv/odoo{{ odoo.major_version }}/bin/python /srv/odoo/src/odoo-{{ odoo.version }}/odoo-bin shell
-        --config /etc/odoo/odoo{{ odoo.major_version }}.conf --no-http
+        {{ odoo.path.venv }}/bin/python {{ odoo.path.src }}/odoo-bin shell
+        --config {{ odoo.path.conf }} --no-http
     - require:
       - odoo-dbuser

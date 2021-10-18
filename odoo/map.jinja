@@ -1,12 +1,18 @@
-{% set odoo = salt['pillar.get']('odoo', {
-    'version': '14.0',
-    'dbname': salt['config.get']('odoo_db', 'demo'),
-    'user': 'odoo',
-    'admin_passwd': 'odoopbx',
-    'prefix': '/srv',
-    'upgrade': True,
-    },
-    merge=True,
-) %}
+{% import_yaml 'agent/defaults.yaml' as defaults %}
+
+{% set odoo = salt['grains.filter_by'](
+  defaults,
+  merge=salt['config.get']('odoo', merge='recurse'),
+  base='odoo')
+%}
 
 {% do odoo.update({'major_version': odoo.version.split('.')[0]}) %}
+
+{% do odoo.update({'path': {
+    'src': odoo.prefix ~ '/' ~ odoo.version ~ '/src',
+    'venv': odoo.prefix ~ '/' ~ odoo.version ~ '/venv',
+    'data': odoo.prefix ~ '/' ~ odoo.version ~ '/data',
+    'addons': odoo.prefix ~ '/' ~ odoo.version ~ '/addons',
+    'conf': '/etc/odoo/odoo' ~ odoo.major_version  ~ '.conf',
+}}) %}
+

@@ -3,6 +3,10 @@ include: 'minion_*.conf'
 
 master: localhost
 
+autosign_grains:
+  - id
+  - odoopbx_auth
+
 clean_dynamic_modules: False # Do not clean contents of extension_modules
 
 # Only load these modules.
@@ -56,7 +60,3 @@ reactor:
       - /etc/salt/reactor/ipset_banned.sls
   - 'AMI/ChallengeResponseFailed':
       - /etc/salt/reactor/ipset_banned.sls
-
-autosign_grains:
-  - id
-  - odoopbx_auth
