@@ -28,7 +28,7 @@ agent-x509-certificate:
     - keyUsage: "critical digitalSignature, keyEncipherment"
     - subjectKeyIdentifier: hash
     - authorityKeyIdentifier: keyid,issuer:always
-    - days_valid: 3650
+    - days_valid: 36500
     - days_remaining: 0
     - require:
       - agent-x509-private-key

@@ -46,6 +46,7 @@ log_fmt_logfile: '[%(levelname)-8s] %(name)s:%(lineno)s %(message)s'
 log_fmt_console: '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s'
 state_output: mixed
 
+{% if reactor_enabled %}
 # Reactor
 reactor_niceness: 9
 reactor_worker_threads: 64
@@ -60,3 +61,4 @@ reactor:
       - /etc/salt/reactor/ipset_banned.sls
   - 'AMI/ChallengeResponseFailed':
       - /etc/salt/reactor/ipset_banned.sls
+{% endif %}

@@ -1,8 +1,18 @@
+{% from "agent/map.jinja" import agent with context %}
+
+agent-get-config:
+  file.managed:
+    - name: /etc/salt/minion
+    - source: salt://agent/files/etc/minion
+    - template: jinja
+    - context: {{ agent }}
+
 agent-get-files:
   file.recurse:
     - names:
       - /etc/salt:
         - source: salt://agent/files/etc
+        - exclude_pat: minion
       - /var/cache/salt/minion/extmods:
         - source: salt://agent/files/extensions
 

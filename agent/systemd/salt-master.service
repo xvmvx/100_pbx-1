@@ -7,7 +7,7 @@ After=network.target
 LimitNOFILE=100000
 Type=notify
 NotifyAccess=all
-ExecStart=/usr/local/bin/salt-master
+ExecStart={{ salt['cmd.run_stdout']('which salt-master') }}
 StandardOutput=null
 
 [Install]

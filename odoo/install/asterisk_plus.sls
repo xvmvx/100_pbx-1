@@ -1,6 +1,5 @@
 {%- from "odoo/map.jinja" import odoo with context -%}
 
-#p.get_dir path=salt://addons/asterisk_plus dest={{ odoo.path }}/addons_plus
 asterisk-plus-get:
   file.recurse:
     - name: {{ odoo.path.addons }}/asterisk_plus

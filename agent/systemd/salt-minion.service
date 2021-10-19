@@ -8,7 +8,7 @@ KillMode=process
 Type=notify
 NotifyAccess=all
 LimitNOFILE=8192
-ExecStart=/usr/local/bin/salt-minion
+ExecStart={{ salt['cmd.run_stdout']('which salt-minion') }}
 StandardOutput=null
 
 [Install]
