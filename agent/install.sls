@@ -35,8 +35,6 @@ agent-pip-reqs:
       - terminado
       - tornado-httpclient-session
       - cherrypy
-        # wait for https://github.com/saltstack/salt/issues/60188 resolved
-      - 'jinja2==2.11.3'
       {%- if agent.pypi_pkgs | d(False) %}
       {%- for item in agent.pypi_pkgs %}
       - {{ item }}
