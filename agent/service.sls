@@ -6,10 +6,11 @@ agent-service-files:
         - agent-pip-reqs
 
 agent-services-enable:
-  service.enabled:
+  service.running:
     - names:
         - salt-master
         - salt-api
         - salt-minion
+    - enable: True
     - require:
         - agent-service-files
