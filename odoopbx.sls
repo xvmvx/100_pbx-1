@@ -1,12 +1,12 @@
 {% if grains.os_family == "Debian" %}
 include:
+  - agent
   {%- if not salt['environ.get']('GITLAB_CI') == 'true' %}
   - asterisk
   {%- endif %}
   - postgres
   - nginx
   - odoo
-  - agent
 {% else %}
 not-yet-supported:
   test.show_notification:

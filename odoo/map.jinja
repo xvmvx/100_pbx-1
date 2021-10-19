@@ -1,4 +1,4 @@
-{% import_yaml 'agent/defaults.yaml' as defaults %}
+{% import_yaml 'odoo/defaults.yaml' as defaults %}
 
 {% set odoo = salt['grains.filter_by'](
   defaults,
