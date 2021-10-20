@@ -33,21 +33,24 @@ sls_list:
   - security
 
 engines:
-  - reactor
   - asterisk_ami
   - asterisk_fastagi
   - asterisk_cli
   - odoo_executor
+{%- if reactor_enabled %}
+  - reactor
+{% endif %}
 
 # Logging
 log_level: info
-log_file: file:///dev/log/LOG_LOCAL0
+log_file: {{ log_file }}
 log_fmt_logfile: '[%(levelname)-8s] %(name)s:%(lineno)s %(message)s'
 log_fmt_console: '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s'
 state_output: mixed
 
-{% if reactor_enabled %}
-# Reactor
+enable_gpu_grains: False
+
+# Reactor is running only if listed among engines
 reactor_niceness: 9
 reactor_worker_threads: 64
 reactor:
@@ -61,4 +64,3 @@ reactor:
       - /etc/salt/reactor/ipset_banned.sls
   - 'AMI/ChallengeResponseFailed':
       - /etc/salt/reactor/ipset_banned.sls
-{% endif %}

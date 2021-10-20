@@ -9,12 +9,22 @@ agent-service-files:
     - require:
         - agent-pip-reqs
 
-agent-services-enable:
+agent-service-enable:
+  service.enabled:
+    - names:
+        - salt-master
+        - salt-api
+        - salt-minion
+    - require:
+        - agent-service-files
+
+{%- if agent.running %}
+agent-service-running:
   service.running:
     - names:
         - salt-master
         - salt-api
         - salt-minion
-    - enable: True
     - require:
         - agent-service-files
+{%- endif %}

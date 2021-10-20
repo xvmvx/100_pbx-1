@@ -26,12 +26,3 @@ agent-api-auth:
   file.managed:
     - name: /etc/salt/auth
     - contents: "odoo|0a8f125a3f41f36c0507203a63cde9ad"
-
-agent-logging-config:
-  file.managed:
-    - names:
-      - /etc/salt/minion_logs.conf
-      - /etc/salt/master_logs.conf
-    - unless: stat /dev/log
-    - contents: "log_file: /var/log/salt.log"
-
