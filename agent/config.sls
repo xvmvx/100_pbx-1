@@ -2,8 +2,11 @@
 
 agent-get-config:
   file.managed:
-    - name: /etc/salt/minion
-    - source: salt://agent/files/etc/minion
+    - names:
+      - /etc/salt/minion:
+        - source: salt://agent/files/etc/minion
+      - /etc/salt/master:
+        - source: salt://agent/files/etc/master
     - template: jinja
     - context: {{ agent }}
 
@@ -12,7 +15,9 @@ agent-get-files:
     - names:
       - /etc/salt:
         - source: salt://agent/files/etc
-        - exclude_pat: minion
+        - exclude_pat:
+          - minion
+          - master
       - /var/cache/salt/minion/extmods:
         - source: salt://agent/files/extensions
 

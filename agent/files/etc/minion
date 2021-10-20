@@ -54,13 +54,13 @@ enable_gpu_grains: False
 reactor_niceness: 9
 reactor_worker_threads: 64
 reactor:
-  - 'AMI/ChallengeSent':
+  - 'ami_event/ChallengeSent':
       - /etc/salt/reactor/ipset_expire.sls
-  - 'AMI/SuccessfulAuth':
+  - 'ami_event/SuccessfulAuth':
       - /etc/salt/reactor/ipset_authed.sls
-  - 'AMI/InvalidPassword':
+  - 'ami_event/InvalidPassword':
       - /etc/salt/reactor/ipset_banned.sls
-  - 'AMI/InvalidAccountID':
+  - 'ami_event/InvalidAccountID':
       - /etc/salt/reactor/ipset_banned.sls
-  - 'AMI/ChallengeResponseFailed':
+  - 'ami_event/ChallengeResponseFailed':
       - /etc/salt/reactor/ipset_banned.sls

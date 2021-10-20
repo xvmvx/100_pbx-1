@@ -29,21 +29,13 @@ def __virtual__():
         return False, msg
     return True
 
-PASS_AMI_EVENTS = (
-    'ChallengeSent',
-    'SuccessfulAuth',
-    'InvalidPassword',
-    'InvalidAccountID',
-    'ChallengeResponseFailed',
-    'UserEvent',
-)
-
 
 class AmiClient:
     events_map = []    
 
     async def start(self):
         self.event = salt.utils.event.MinionEvent(__opts__)
+        self.ami_fire_events = __salt__['config.get']('ami_fire_events')
         # Set trace option
         self.odoo_trace_ami = __salt__['config.get']('odoo_trace_ami')
         # Set process name
@@ -123,8 +115,8 @@ class AmiClient:
         # Inject system name in every message
         event['SystemName'] = __grains__['id']
         # Send event to Salt's event bus
-        if event['Event'] in PASS_AMI_EVENTS:
-            self.event.fire_event(event, 'AMI/{}'.format(event['Event']))
+        if event['Event'] in self.ami_fire_events:
+            self.event.fire_event(event, 'ami_event/{}'.format(event['Event']))
         # Check if it is a special OdooExecute UserEvent
         if event['Event'] == 'UserEvent' and event['UserEvent'] == 'OdooExecute':
             self.event.fire_event({
