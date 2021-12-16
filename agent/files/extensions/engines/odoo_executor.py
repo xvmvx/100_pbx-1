@@ -46,6 +46,11 @@ class OdooExecutor:
                 self.odoo = odoorpc.ODOO(host, port=port, protocol=protocol)
                 self.odoo.login(db, user, password)
                 log.info('Logged into Odoo.')
+                # Set minion's ID & timezone upon connect.
+                minion_id = __salt__['config.get']('id')
+                timezone = __salt__['timezone.get_zone']()
+                self.odoo.env['asterisk_plus.server'].set_minion_data(
+                    minion_id, timezone)
                 break
             except Exception as e:
                 log.error('Cannot connect to Odoo, retrying %s', e)
