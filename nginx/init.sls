@@ -9,10 +9,10 @@ include:
   - nginx.deprecated
   {%- endif %}
   - nginx.config
+  - nginx.service
   {%- if nginx.snippets is defined %}
   - nginx.snippets
   {%- endif %}
-  - nginx.service
   - nginx.servers
   - nginx.certificates
 
