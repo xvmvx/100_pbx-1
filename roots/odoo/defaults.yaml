@@ -1,0 +1,7 @@
+odoo:
+  version: '14.0'
+  dbname: demo
+  user: odoo
+  admin_passwd: odoopbx
+  prefix: /srv/odoo
+  upgrade: True

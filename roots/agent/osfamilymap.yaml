@@ -1,0 +1,18 @@
+Debian:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - python3-m2crypto
+    - python3-psutil
+    - swig
+Alpine:
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - swig
+    - openssl-dev
+    - py3-psutil
+  pypi_pkgs:
+    - M2Crypto
