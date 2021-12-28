@@ -42,7 +42,6 @@ setup(
     package_dir={'odoopbx': ''},
     packages=[
         'odoopbx.scripts',
-        'odoopbx.scripts.migrations',
     ],
     include_package_data=True,
     install_requires=[
@@ -53,7 +52,7 @@ setup(
     ],
     entry_points='''
 [console_scripts]
-odoopbx=odoopbx.scripts.odoopbx_cli:main
+odoopbx=odoopbx.odoopbx_cli:main
     ''',
     zip_safe=False,
     classifiers=[
