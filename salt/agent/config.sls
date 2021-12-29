@@ -5,6 +5,22 @@ generate-minion-id:
     - name: uuidgen > /etc/salt/minion_id
     - unless: bash -s [ "`cat /etc/salt/minion_id | wc -c`" = "37" ] # UUID string?
 
+# Create a local file for local settings.
+touch-minion-local-conf:
+  file.managed:
+    - name: /etc/salt/minion_local.conf
+    - contents: ''
+    - contents_newline: False
+    - unless: test -f /etc/salt/minion_local.conf
+
+# Create a local file for master for possible overrides.
+touch-master-local-conf:
+  file.managed:
+    - name: /etc/salt/master_local.conf
+    - contents: ''
+    - contents_newline: False
+    - unless: test -f /etc/salt/master_local.conf
+
 agent-get-config:
   file.managed:
     - names:
