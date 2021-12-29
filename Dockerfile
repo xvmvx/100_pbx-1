@@ -1,34 +1,23 @@
 FROM alpine:3
 
-RUN apk add py3-pip python3-dev build-base linux-headers zeromq-dev tini asterisk util-linux
+ENV MUSL_LOCPATH=/usr/local/share/i18n/locales/musl LANG=C.UTF-8
+RUN apk add --update py3-pip python3-dev build-base linux-headers zeromq-dev tini asterisk \
+    util-linux git swig cmake make musl-dev openssl-dev gcc gettext-dev libintl && cd /tmp && \
+    git clone https://github.com/rilian-la-te/musl-locales.git && \
+    cd /tmp/musl-locales && cmake . && make && make install && \
+    addgroup ssl-cert
+
+# Wheel is required.
 RUN pip3 install wheel
-ENV MUSL_LOCPATH=/usr/local/share/i18n/locales/musl
-RUN apk add --update git cmake make musl-dev gcc gettext-dev libintl
-RUN cd /tmp && git clone https://github.com/rilian-la-te/musl-locales.git
-RUN cd /tmp/musl-locales && cmake . && make && make install
-RUN addgroup ssl-cert
-
-ENV LANG=C.UTF-8
-
-RUN pip3 install jinja2==2.11.3
-RUN pip3 install salt 
-RUN pip3 install click 
-RUN pip3 install google-cloud-texttospeech
-
- RUN pip3 install aiorun ipsetpy OdooRPC setproctitle terminado tornado-httpclient-session cherrypy
+# Why this is not run from install.sls?
+RUN pip3 install M2Crypto
 
 COPY ./ /srv/odoopbx/
 RUN pip3 install /srv/odoopbx
-COPY ./salt/agent/files/extensions/ /var/cache/salt/minion/extmods/
-COPY ./salt/agent/files/etc/ /etc/salt/
+RUN mkdir /etc/salt && echo -e 'state_output: mixed\nfile_roots:\n  base:\n    - /srv/odoopbx/salt' > /etc/salt/minion && cat /etc/salt/minion && salt-call -l info --local state.apply agent
 RUN rm -rf /srv/odoopbx
 
-RUN odoopbx init --auth NubdupodLu
+EXPOSE 40000
+VOLUME ["/var/lib/asterisk", "/var/spool/asterisk", "/var/log/asterisk", "/etc/asterisk", "/var/run/asterisk", "/srv/odoopbx"]
 
-
-EXPOSE 40000 4574
-VOLUME ["/var/lib/asterisk", "/var/spool/asterisk", "/var/log/asterisk", "/etc/asterisk", "/var/run/asterisk", "/srv/odoopbx", "/etc/odoopbx"]
-
-
-CMD tini -- /usr/bin/env salt-minion -l info
-
+CMD echo "Specify salt process to run, for example: tini -- /usr/bin/env salt-minion -l info"

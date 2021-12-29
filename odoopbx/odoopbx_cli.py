@@ -23,20 +23,6 @@ TYPESCRIPT_PATH = '/var/log/odoopbx-install-'+datetime.now().__format__('%s')+'.
 SALT_PATH = '/etc/salt'
 MINION_LOCAL_CONF = 'minion_local.conf'
 ODOOPBX_MASTER = 'master.odoopbx.com:44506'
-ODOOPBX_MINION_SETTINGS = {
-    'publish_port': 44505,
-    'autosign_grains': ['odoopbx_auth'],
-    'master_tries': 1,
-    'master_alive_interval': 10,
-    'auth_tries': -1,
-    'ping_interval': 1, # minutes
-    'recon_randomize': False,
-    'rejected_retry': True,
-    'log_level': 'info',
-    'log_fmt_console': '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s',
-    'state_output': 'mixed',
-    'pki_dir': os.path.join(SALT_PATH, 'pki/odoopbx'),
-}
 
 
 def _config_load():
@@ -61,57 +47,6 @@ def main():
     # Set the locale.
     if 'utf' not in os.getenv('LANG', '').lower():
         os.environ['LANG'] = os.environ['LC_ALL'] = 'C.UTF-8'
-
-
-@main.command(help='Initialize Salt configuration')
-@click.option('--auth', type=str, help='Salt Master auth key. Value is stored as "odoopbx_auth" grain')
-@click.option('--master', type=str, default=ODOOPBX_MASTER, help='Salt master address. '
-        f'Default value: {ODOOPBX_MASTER}')
-def init(auth, master):
-    # Create directories.
-    for d in [
-            '/etc/salt/pki/minion',
-            '/etc/salt/pki/odoopbx',
-            '/etc/salt/odoopbx',
-            ]:
-        try:
-            os.makedirs(d)
-        except FileExistsError:
-            pass
-    # Generate minion id.
-    minion_id = str(uuid.uuid4())
-    click.echo('Initializing salt minion ID {} '.format(minion_id))        
-    with open(os.path.join(SALT_PATH, 'minion_id'), 'w') as f:
-        f.write(minion_id+'\n')
-    ODOOPBX_MINION_SETTINGS['master'] = master
-    _config_save(ODOOPBX_MINION_SETTINGS, dest='odoopbx/minion')
-    try:
-        os.unlink(os.path.join(SALT_PATH, 'odoopbx/grains'))
-    except FileNotFoundError:
-        pass
-    try:
-        os.symlink('../grains', os.path.join(SALT_PATH, 'odoopbx/grains'))
-    except Exception as e:
-        click.secho(f'Error: {e}', err=True, fg='red')
-        exit(8)
-    if auth:
-        subprocess.check_call(
-            f'salt-call --local -c /etc/salt/odoopbx '
-            '--out=quiet grains.set odoopbx_auth {auth}',
-            shell=True)
-    else:
-        auth = subprocess.check_output('salt-call -c /etc/salt/odoopbx --local grains.get '
-                '--out=newline_values_only odoopbx_auth', shell=True)
-        if not auth:
-            click.secho('Error: auth key is not set. Please specify it with --auth option', err=True, fg='red')
-            exit(1)
-    try:
-        subprocess.check_call(f'salt-call -c /etc/salt/odoopbx --out=newline_values_only '
-                f'test.echo text="Minion {minion_id} ready to go"', shell=True)
-    except subprocess.CalledProcessError as e:
-        click.secho(f'Error: {e}', err=True, fg='red')
-        exit(2)
-
 
 @main.command()
 @click.option('--master', type=str, help="Salt master address (optional)")
@@ -139,7 +74,7 @@ def install(service, master):
         subprocess.check_call('script -ec '
             '"salt-call --local -V; '
             'salt-call --local grains.items; '
-            f'salt-call -c /etc/salt/odoopbx {options} state.apply {service}" '
+            f'salt-call -c /etc/salt/install {options} state.apply {service}" '
             f'{TYPESCRIPT_PATH}',
             shell=True)
     except subprocess.CalledProcessError as e:
@@ -248,7 +183,7 @@ def show():
 
 @show.command(help='Show system version.', name='version')
 def show_version():
-    minion_id = subprocess.check_output('salt-call --out=txt config.get id',
+    minion_id = subprocess.check_output('salt-call --local --out=txt config.get id',
         shell=True, universal_newlines=True)
     import odoopbx
     click.echo('Odoo PBX ID: {}CLI version: {}'.format(

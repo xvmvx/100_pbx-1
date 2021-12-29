@@ -17,19 +17,11 @@ agent-pkg-reqs:
     - refresh: true
 {% endif %}
 
-agent-pip-panoramisk:
-  pip.installed:
-    - pkgs:
-      - https://github.com/litnimax/panoramisk/archive/master.zip
-    - unless:
-      - pip3 show panoramisk
-
 agent-pip-reqs:
   pip.installed:
     - pkgs:
       - aiorun
       - ipsetpy
-      - OdooRPC
       - setproctitle
       - terminado
       - tornado-httpclient-session

@@ -5,7 +5,6 @@ master: localhost
 
 autosign_grains:
   - id
-  - odoopbx_auth
 
 clean_dynamic_modules: False # Do not clean contents of extension_modules
 

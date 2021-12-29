@@ -1,0 +1,12 @@
+master: 'master.odoopbx.com:44506'
+publish_port: 44505
+master_tries: 1
+master_alive_interval: 10
+auth_tries: -1
+ping_interval: 1 # minutes
+recon_randomize: False
+rejected_retry: True
+log_level: 'info'
+log_fmt_console: '%(asctime)s %(colorlevel)s %(name)s:%(lineno)s %(message)s'
+state_output: 'mixed'
+pki_dir: '/etc/salt/pki/install'

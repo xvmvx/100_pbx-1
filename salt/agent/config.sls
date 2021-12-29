@@ -1,5 +1,10 @@
 {% from "agent/map.jinja" import agent with context %}
 
+generate-minion-id:
+  cmd.run:
+    - name: uuidgen > /etc/salt/minion_id
+    - unless: bash -s [ "`cat /etc/salt/minion_id | wc -c`" = "37" ] # UUID string?
+
 agent-get-config:
   file.managed:
     - names:
@@ -25,6 +30,12 @@ agent-autosign-config:
   file.managed:
     - name: /etc/salt/autosign/id
     - contents: {{ grains.id }}
+    - makedirs: True
+
+install-pki-dir:
+  file.directory:
+    - name: /etc/salt/pki/install
+    - dir_mode: 700
     - makedirs: True
 
 agent-api-auth:

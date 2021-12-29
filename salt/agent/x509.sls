@@ -1,9 +1,8 @@
-{% if grains.os_family not in ('Alpine',) %}
 agent-x509-ssl-cert-group:
   group.present:
     - name: ssl-cert
     - system: True
-{% endif %}
+
 
 agent-x509-pki-dir:
   file.directory:

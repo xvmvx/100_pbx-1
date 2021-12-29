@@ -41,10 +41,10 @@ setup(
     packages=find_packages(include=['odoopbx', 'odoopbx.*']),
     include_package_data=True,
     install_requires=[        
-        'jinja2==2.11.3',
-        'salt>=3003,<3004', # wait for https://github.com/saltstack/salt/issues/60188 resolved
+        'salt',
+        'odoorpc',
+        'panoramisk @ https://github.com/litnimax/panoramisk/archive/master.zip',
         'click',
-        'google-cloud-texttospeech',
     ],
     entry_points='''
 [console_scripts]
