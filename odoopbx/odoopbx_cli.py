@@ -15,7 +15,6 @@ import tempfile
 import time
 import uuid
 import yaml
-import odoopbx.scripts
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -251,8 +250,9 @@ def show():
 def show_version():
     minion_id = subprocess.check_output('salt-call --out=txt config.get id',
         shell=True, universal_newlines=True)
+    import odoopbx
     click.echo('Odoo PBX ID: {}CLI version: {}'.format(
-        minion_id.split(':')[1], odoopbx.scripts.__version__))
+        minion_id.split(':')[1], odoopbx.__version__))
 
 
 @show.command(help='Show system status.', name='report')

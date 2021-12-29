@@ -30,7 +30,6 @@ agent-pip-reqs:
       - aiorun
       - ipsetpy
       - OdooRPC
-      - pastebin
       - setproctitle
       - terminado
       - tornado-httpclient-session
