@@ -2,8 +2,8 @@
 
 generate-minion-id:
   cmd.run:
-    - name: uuidgen > /etc/salt/minion_id
-    - unless: bash -s [ "`cat /etc/salt/minion_id | wc -c`" = "37" ] # UUID string?
+    - name: python3 -c 'import uuid; open("/etc/salt/minion_id","w").write(str(uuid.uuid4()))'
+    - unless: test "`cat /etc/salt/minion_id | wc -c`" = "36"
 
 # Create a local file for local settings.
 touch-minion-local-conf:

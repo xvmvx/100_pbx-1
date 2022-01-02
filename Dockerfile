@@ -12,12 +12,14 @@ RUN pip3 install wheel
 # Why this is not run from install.sls?
 RUN pip3 install M2Crypto
 
-COPY ./ /srv/odoopbx/
-RUN pip3 install /srv/odoopbx
-RUN mkdir /etc/salt && echo -e 'state_output: mixed\nfile_roots:\n  base:\n    - /srv/odoopbx/salt' > /etc/salt/minion && cat /etc/salt/minion && salt-call -l info --local state.apply agent
-RUN rm -rf /srv/odoopbx
+COPY ./ /srv/agent/
+RUN pip3 install /srv/agent
+RUN mkdir /etc/salt && echo -e 'state_output: mixed\nfile_roots:\n  base:\n    - /srv/agent/salt' > /etc/salt/minion && cat /etc/salt/minion && salt-call -l info --local state.apply odoopbx
+RUN rm -rf /srv/agent
 
 EXPOSE 40000
 VOLUME ["/var/lib/asterisk", "/var/spool/asterisk", "/var/log/asterisk", "/etc/asterisk", "/var/run/asterisk", "/srv/odoopbx"]
 
-CMD echo "Specify salt process to run, for example: tini -- /usr/bin/env salt-minion -l info"
+COPY entrypoint.sh /entrypoint.sh
+RUN apk add tmux
+CMD /entrypoint.sh

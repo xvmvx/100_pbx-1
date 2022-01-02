@@ -2,5 +2,5 @@
 
 include:
   - .server
-  - .asterisk_plus
+  - .addons
 

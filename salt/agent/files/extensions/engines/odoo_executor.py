@@ -48,12 +48,16 @@ class OdooExecutor:
                 log.info('Logged into Odoo.')
                 # Set minion's ID & timezone upon connect.
                 minion_id = __salt__['config.get']('id')
-                timezone = __salt__['timezone.get_zone']()
+                try:
+                    timezone = __salt__['timezone.get_zone']()
+                except Exception as e:
+                    if 'Unable to get timezone' in str(e):
+                        timezone = None
                 self.odoo.env['asterisk_plus.server'].set_minion_data(
                     minion_id, timezone)
                 break
             except Exception as e:
-                log.error('Cannot connect to Odoo, retrying %s', e)
+                log.error('Cannot connect to Odoo: %s', e)
                 time.sleep(1)
 
 
