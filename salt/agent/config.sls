@@ -5,15 +5,26 @@ agent-generate-minion-id:
     - name: python3 -c 'import uuid; open("/etc/salt/minion_id","w").write(str(uuid.uuid4()))'
     - unless: test "`cat /etc/salt/minion_id | wc -c`" = "36"
 
-agent-conf-files:
+agent-etc-files:
   file.recurse:
     - names:
       - /etc/salt:
         - source: salt://agent/files/etc
-        - template: jinja
-        - context: {{ agent }}
+        - exclude_pat:
+          - minion
+          - master
       - /var/cache/salt/minion/extmods:
         - source: salt://agent/files/extensions
+
+agent-conf-files:
+  file.managed:
+    - names:
+      - /etc/salt/minion:
+        - source: salt://agent/files/etc/minion
+      - /etc/salt/master:
+        - source: salt://agent/files/etc/master
+    - template: jinja
+    - context: {{ agent }}
 
 # Create files for local settings.
 agent-conf-files-local:
