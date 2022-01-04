@@ -3,7 +3,7 @@
 agent-service-files:
   file.recurse:
     - name:  /etc/systemd/system/
-    - source: salt://agent/systemd/
+    - source: salt://agent/files/systemd/
     - template: jinja
     - context: {{ agent }}
     - require:
