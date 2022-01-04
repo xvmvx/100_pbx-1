@@ -5,8 +5,8 @@ include:
   - asterisk
   {%- endif %}
   - postgres
-  - nginx
   - odoo
+  - nginx
 {% else %}
 not-yet-supported:
   test.show_notification:

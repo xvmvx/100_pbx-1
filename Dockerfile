@@ -14,7 +14,10 @@ RUN pip3 install M2Crypto
 
 COPY ./ /srv/agent/
 RUN pip3 install /srv/agent
-RUN mkdir /etc/salt && echo -e 'state_output: mixed\nfile_roots:\n  base:\n    - /srv/agent/salt' > /etc/salt/minion && cat /etc/salt/minion && salt-call -l info --local state.apply odoopbx
+RUN mkdir /etc/salt && echo -e 'state_output: mixed\nfile_roots:\n  base:\n    - /srv/agent/salt' > /etc/salt/minion && \
+    cat /etc/salt/minion > /etc/salt/minion_dev.conf && \
+    cat /etc/salt/minion && \
+    salt-call -l info --local state.apply odoopbx
 RUN rm -rf /srv/agent
 
 EXPOSE 40000
