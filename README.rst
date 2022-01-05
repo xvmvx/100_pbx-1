@@ -1,97 +1,81 @@
-===============================
-The OdooPBX Management Utility
-===============================
-Features:
+The OdooPBX Agent
+=================
+The Agent itself is built upon the Saltstack platform and performs the following functions:
 
-* The Agent installation & configuration
-* Asterisk installation management
-* Odoo installation management
+* Forwards Asterisk events to Odoo according to the downloaded AMI events map.
+* Executes Asterisk actions received from Odoo.
+* Protects Asterisk from DDoS and password bruteforce attacks (if enabled).
+* Manages the installation & upgrade process.
 
-For more details visit the project homepage: https://odoopbx.com
+The best place to install the Agent is the same server where Asterisk is running because in this case
+it has direct access to local file system  and can access call recordings. 
 
-*Latest* Odoo modules require the *latest* odoopbx utility. If you have outdates Odoo modules
-see the release history for the corresponding odoopbx version and install it.
+If you don't need call recordings in Odoo you can setup the Asterisk agent on a different computer but
+it is advised to place it near the Asterisk server.
 
-For example, to install version 0.80 enter the following command:
+It is also possible install the Agent into a virtual environment usind docker.
+
+Please note that the Agent requires root privileges. The commands below must be run as the **root** user.
+
+Installation on Ubuntu and Debian
+#################################
 
 .. code::
 
-    pip3 install odoopbx==0.80
+    apt update && apt -y install python3-pip python3-setproctitle
+    pip3 install odoopbx
+
+Installation on CentOS
+######################
+
+Versions 6&7
+++++++++++++
+First, you should enable and install Python3 and pip.
+
+There are at least `3 ways to install the latest Python3 package on CentOS <https://www.2daygeek.com/install-python-3-on-centos-6/>`_. 
+
+Below is one of them (IUS).
+
+.. code:: 
+
+    curl 'https://setup.ius.io/' -o setup-ius.sh
+    sh setup-ius.sh
+    yum --enablerepo=ius install python36 python36-pip python36-setproctitle
+    pip3 install odoopbx
+
+.. warning::
+
+   Please note that if you are using FreePBX, which is based on Centos 7, it has a different Python3 naming schema,
+   similar to ius, but using Sangoma's own repositories. You shouldn't try to use 3rd party repositories,
+   simply run ``yum makecache`` to get latest information from Sangoma's repositories and install Python3 by running 
+   ``yum install python36u python36u-pip``
+
+Version 8
++++++++++
+Latest CentOS is quite ready for Python3. So here are the installation steps:
+
+.. code::
+
+    yum install python3 python3-pip python3-devel
+    pip3 install odoopbx
 
 
-ChangeLog
-=========
-0.105 (2021-)
-* ``odoo_events_model`` option added. Defaults to 'asterisk_common.event'.
+Sangoma Linux release 7.8
+#########################
 
-0.104 (2021-08-31)
+.. code::
+
+    yum install python36u python36u-pip python36u-devel
+    pip3.6 install odoopbx
+    
+
+Installation error
 ##################
-* Added jsonrpcserver <= 4.2.0 dependency.
+During ``odoopbx install agent`` execution the following log lines are expected and they are normal:
 
-0.103 (2021-07-15)
-##################
+.. code::
+ 
+ 14:16:12 - salt.loaded.ext.module.asteriskmod:40 - ERROR - ipsetpy lib not found, asterisk module not available.
+ 14:16:12 - salt.loaded.ext.module.odoomod:23 - INFO - OdooRPC lib not found, odoo module not available.
 
-* Added timeout and as_list parameters to asterisk.manager_action command in order to fix Panoramisk AGI issue.
-* Added Odoo re-connect when Agent is started before Odoo and Odoo is not available.
-
-0.102 (2021-07-08)
-##################
-
-* Fix Jinja2 version
-* Upgrade postgres formula
-* switch to state_output mixed
-
-0.101 (2021-07-07)
-##################
-
-* Added Odoo executor engine.
-
-0.100 (2021-06-18)
-##################
-
-* FastAGI engine is added to ``default.conf`` and is ready to be enabled with just ``fastagi_enabled`` option.
-
-0.99 (2021-06-14)
-#################
-
-* Google text-to-speech support added. See https://docs.odoopbx.com/developer_guide/tts.html for details.
-
-0.98 (2021-06-09)
-#################
-
-* Isabel support added for the Agent.
-
-0.97 (2021-06-03)
-#################
-
-* Agent HTTP Connector bug fix.
-
-0.96 (2021-05-03)
-#################
-
-* Salt bug with threded context is solved (https://github.com/saltstack/salt/issues/59962). So we now use Salt >= 3003!
-
-0.95 (2021-04-20)
-#################
-
-* Added a new option to the Agent to enable / disable ``!`` command from Asterisk console:
-  ``asterisk_shell_enabled`` = False by default. See Agent Options in the docs.
-
-0.94 (2021-04-07)
-#################
-
-* Fixed non-critical bug in odoo_connector.py (logger -> log).
-
-0.93 (2021-04-06)
-#################
-
-* asterisk_cli_enabled is now False by default. So if you use asterisk_base module you should
-  enable the console service with ``odoopbx config set asterisk_cli_enabled true`` and restart the Agent.
-
-0.92 (2021-04-05)
-#################
-
-* Fixed a bug with blackist list entry addition.
-* Salt 2002.6 is set as dependency as there incompatible change in Salt 3003.
-* Fixed a bug when manually added ipset entry to the banned list was not shown in the Odoo banned report.
-
+This is because these packages are going to be installed exactly during this operation.
