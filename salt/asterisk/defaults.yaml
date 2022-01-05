@@ -32,3 +32,4 @@ asterisk:
   groups:
     - ssl-cert
   force_update: False
+  force_config_update: False

@@ -11,6 +11,6 @@ asterisk-configs:
     - source: salt://asterisk/files/configs
     - template: jinja
     - context: {{ asterisk }}
-{%- if not asterisk.force_update %}
+{%- if not (asterisk.force_update or asterisk.force_config_update) %}
     - replace: False
 {%- endif %}

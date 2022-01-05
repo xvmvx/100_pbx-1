@@ -3,7 +3,6 @@ agent-x509-ssl-cert-group:
     - name: ssl-cert
     - system: True
 
-
 agent-x509-pki-dir:
   file.directory:
     - name: /etc/pki/selfsigned

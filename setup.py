@@ -43,7 +43,6 @@ setup(
     install_requires=[        
         'salt',
         'odoorpc',
-        'panoramisk @ https://github.com/litnimax/panoramisk/archive/master.zip',
         'click',
     ],
     entry_points='''
