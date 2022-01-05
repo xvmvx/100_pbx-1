@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-update 
-RUN apt install -y python3-pip tmux
+RUN apt install -y python3-pip tmux vim iputils-ping
 RUN pip3 install /opt/agent
 
 RUN ln -s /opt/agent/salt/ /srv/salt
