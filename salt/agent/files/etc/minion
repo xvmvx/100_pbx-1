@@ -1,7 +1,7 @@
 # Options from minion_*.conf in Salt config directory take precedence
 include: 'minion_*.conf'
 
-master: localhost
+master: master
 
 autosign_grains:
   - id
