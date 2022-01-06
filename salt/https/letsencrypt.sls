@@ -1,5 +1,13 @@
+{%- from "letsencrypt/map.jinja" import letsencrypt with context %}
+
 include:
   - ..letsencrypt
+
+letsencrypt-create-webroot-dir:
+  file.directory:
+    - name: {{ letsencrypt.config['webroot-path'] }}
+    - require_in:
+      - letsencrypt-config
 
 letsencrypt-activate-cert:
   file.symlink:
