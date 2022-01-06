@@ -42,7 +42,6 @@ setup(
     include_package_data=True,
     install_requires=[        
         'salt',
-        'odoorpc',
         'click',
     ],
     entry_points='''

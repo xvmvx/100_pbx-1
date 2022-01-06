@@ -27,6 +27,7 @@ agent-pip-reqs:
       - tornado-httpclient-session
       - cherrypy
       - 'panoramisk @ https://github.com/litnimax/panoramisk/archive/master.zip'
+      - odoorpc
       {%- if agent.pypi_pkgs | d(False) %}
       {%- for item in agent.pypi_pkgs %}
       - {{ item }}
