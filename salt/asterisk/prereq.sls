@@ -7,6 +7,10 @@
 
 {% set pkg_list = asterisk.pkgs_basic.split() | union(asterisk.pkgs_build.split()) %}
 
+asterisk-prereq-test:
+  test.show_notification:
+    - text: {{ pkg_list }}
+
 asterisk-prereq:
   pkg.installed:
     - pkgs: {{ pkg_list }}

@@ -6,7 +6,7 @@ agent:
 asterisk:
   force_update: True
   lookup:
-    rev: certified/16.8
+    rev: 16
 
 odoo:
  dbname: odoopbx_14
