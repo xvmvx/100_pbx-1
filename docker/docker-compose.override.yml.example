@@ -15,7 +15,7 @@ services:
   minion:
     #command: sleep 100000
     volumes:
-      - ./:/opt/agent
+      - ../:/opt/agent
 
   master:
     #command: salt-master -l debug
@@ -23,7 +23,7 @@ services:
   asterisk:
     #command: sleep 10000000
     volumes:
-      - ./:/opt/agent
+      - ../:/opt/agent
 
   freepbx:
     ports:
