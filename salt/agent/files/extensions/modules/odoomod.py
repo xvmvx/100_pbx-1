@@ -1,4 +1,5 @@
 import logging
+import os
 from salt.utils import json
 import time
 
@@ -43,7 +44,9 @@ def _get_odoo(host=None, port=None, user=None, password=None, db=None,
         if not port:
             port = int(__salt__['config.get']('odoo_port', 8069))
         if not db:
-            db = __salt__['config.get']('odoo_db', 'demo')
+            # Get database from ENV or config.
+            db = os.environ.get('ODOO_DB',
+                __salt__['config.get']('odoo_db', 'demo'))
         if not user:
             user = __salt__['config.get']('odoo_user', 'admin')
         if not password:
