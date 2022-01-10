@@ -6,6 +6,7 @@ import asyncio
 from aiorun import run
 import concurrent.futures
 import logging
+import os
 import time
 import salt.utils.event
 import salt.utils.process
@@ -34,7 +35,9 @@ class OdooExecutor:
     def connect(self):
         host = __salt__['config.get']('odoo_host', 'localhost')
         port = int(__salt__['config.get']('odoo_port', 8069))
-        db = __salt__['config.get']('odoo_db', 'demo')
+        # Get database from ENV or config.
+        db = os.environ.get('ODOO_DB',
+            __salt__['config.get']('odoo_db', 'demo'))
         user = __salt__['config.get']('odoo_user', 'admin')
         password = __salt__['config.get']('odoo_password', 'admin')
         protocol = 'jsonrpc+ssl' if __salt__['config.get'](
