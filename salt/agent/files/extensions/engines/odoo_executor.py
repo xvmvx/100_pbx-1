@@ -7,6 +7,7 @@ from aiorun import run
 import concurrent.futures
 import logging
 import os
+import sys
 import time
 import salt.utils.event
 import salt.utils.process
@@ -42,10 +43,10 @@ class OdooExecutor:
         password = __salt__['config.get']('odoo_password', 'admin')
         protocol = 'jsonrpc+ssl' if __salt__['config.get'](
             'odoo_use_ssl') else 'jsonrpc'
-        log.info(
-            'Connecting to Odoo %s://%s@%s:%s...', protocol, user, host, port)
-        while True:
+        while self.loop.is_running():
             try:
+                log.info(
+                    'Connecting to Odoo %s://%s@%s:%s/%s...', protocol, user, host, port, db)
                 self.odoo = odoorpc.ODOO(host, port=port, protocol=protocol)
                 self.odoo.login(db, user, password)
                 log.info('Logged into Odoo.')
