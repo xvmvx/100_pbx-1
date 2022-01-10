@@ -1,0 +1,46 @@
+version: '3.1'
+services:
+
+  odoo:
+    ports:
+      - 0.0.0.0:8069:8069
+      - 0.0.0.0:8072:8072
+    volumes:
+      - ./odoo/odoo.conf:/etc/odoo/odoo.conf
+      - /srv/dev/addons/:/mnt/addons
+      #- /srv/dev/addons_ee:/mnt/addons_ee
+      #- /srv/dev/enterprise:/mnt/enterprise
+    #command: sleep 10000000
+
+  minion:
+    #command: sleep 100000
+    volumes:
+      - ./agent:/opt/agent
+
+  master:
+    #command: salt-master -l debug
+
+  asterisk:
+    #command: sleep 10000000
+    volumes:
+      - ./agent:/opt/agent
+
+  freepbx:
+    ports:
+      - 8008:80
+      - 8043:443
+    volumes:
+      - ./freepbx/certs:/certs
+      #- ./logs:/var/log
+      #- ./data/www:/var/www/html
+    environment:
+      - VIRTUAL_HOST=demo.odoopbx.com
+      - ENABLE_SSL=TRUE
+      - LETSENCRYPT_HOST=demo.odoopbx.com
+      - LETSENCRYPT_EMAIL=LETSENCRYPT_EMAIL@gmail.com
+      #- RTP_START=18000
+      #- RTP_FINISH=18100
+      ### If you are using TLS Support for Apache to listen on 443 in the container drop them in /certs and set these:
+      #- TLS_CERT=cert.pem
+      #- TLS_KEY=key.pem
+

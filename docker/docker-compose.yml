@@ -1,0 +1,114 @@
+version: '3.1'
+services:
+
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+
+  odoo:
+    depends_on:
+      - db
+    image: odoopbx/odoo:${ODOO_VERSION:-14}
+    restart: unless-stopped
+    command: odoo -d ${ODOO_DB:-odoopbx_14}
+    environment:
+    - HOST=db
+    - USER=odoo
+    - PASSWORD=odoo
+    - DATABASE=${ODOO_DB:-odoopbx_14}
+    volumes:
+      - odoo-data:/var/lib/odoo
+
+  minion:
+    image: odoopbx/agent:1.0
+    ipc: host
+    restart: unless-stopped
+    # Required to manage host's ipsets (if reactor is enabled).
+    privileged: true
+    command: salt-minion -l info
+    volumes:
+      - asterisk_spool:/var/spool/asterisk
+      - salt_run:/var/run/salt
+    environment:
+      - ODOO_DB=${ODOO_DB:-odoopbx_14}
+
+  api:
+    image: odoopbx/agent:1.0
+    ipc: host
+    depends_on:
+      - master
+    restart: unless-stopped
+    # Required to manage host's ipsets (if reactor is enabled).
+    privileged: true
+    command: salt-api -l info
+    volumes:
+      - asterisk_spool:/var/spool/asterisk
+      - salt_run:/var/run/salt
+      - ./master_api.conf:/etc/salt/master_api.conf
+
+  master:
+    image: odoopbx/agent:1.0
+    ipc: host
+    restart: unless-stopped
+    # Required to manage host's ipsets (if reactor is enabled).
+    privileged: true
+    networks:
+      default:
+        # We need static IP for master as it's set in master_api.conf in api container.
+        ipv4_address: 10.99.10.10
+    command: salt-master -l info
+    volumes:
+      - asterisk_spool:/var/spool/asterisk
+      - salt_run:/var/run/salt
+      - ./master.conf:/etc/salt/master_interface.conf
+
+  asterisk:
+    image: odoopbx/asterisk:16.8-cert12
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - asterisk_etc:/etc/asterisk/
+      - asterisk_lib:/var/lib/asterisk
+      - asterisk_spool:/var/spool/asterisk
+      - asterisk_log:/var/log/asterisk
+      - asterisk_run:/var/run/asterisk/
+
+  freepbx:
+    # https://hub.docker.com/r/tiredofit/freepbx. See also:
+    # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
+    image: tiredofit/freepbx
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    privileged: True
+    volumes:
+      - freepbx_data:/data
+      - freepbx_db:/var/lib/mysql
+    environment:
+      - DB_EMBEDDED=TRUE
+
+
+volumes:
+  odoo-data:
+  db-data:
+  salt_run:
+  asterisk_spool:
+  asterisk_lib:
+  asterisk_log:
+  asterisk_etc:
+  asterisk_run:
+  freepbx_db:
+  freepbx_data:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.99.10.0/24

@@ -6,7 +6,7 @@ RUN apt update && \
 # Don't re-install Salt & deps everytime a file in agent folder is changed.
 RUN pip3 install salt
 COPY ./ /opt/agent/
-RUN pip3 install /opt/agent && ln -s /opt/agent/salt /srv
+RUN pip3 install /opt/agent && ln -s /opt/agent/salt /srv && ln -s /opt/agent/pillar /srv
 RUN salt-call --local state.apply agent
 
 EXPOSE 40000 8000

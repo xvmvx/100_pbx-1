@@ -5,3 +5,4 @@
 ._.DS_Store
 .vscode/
 test/
+docker-compose.override.yml
