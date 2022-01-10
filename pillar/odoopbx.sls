@@ -6,10 +6,10 @@ agent:
 asterisk:
   force_update: True
   lookup:
-    rev: 16
+    rev: certified/16.8-cert12
 
 odoo:
- dbname: odoopbx_14
+ dbname: odoopbx
 
 letsencrypt:
   install_method: pip
