@@ -1,6 +1,0 @@
-[submodule "agent"]
-	path = agent
-	url = git@github.com:odoopbx/agent.git
-[submodule "odoo/addons"]
-	path = odoo/addons
-	url = git@github.com:odoopbx/addons.git

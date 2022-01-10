@@ -12,4 +12,5 @@ RUN salt-call --local state.apply asterisk
 EXPOSE 8089 5038 65060
 VOLUME ["/var/spool/asterisk"]
 
-CMD dump-init /usr/sbin/asterisk -f
+ENTRYPOINT ["dumb-init"]
+CMD /usr/sbin/asterisk -f

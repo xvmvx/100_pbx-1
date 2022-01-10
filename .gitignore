@@ -6,3 +6,4 @@
 .vscode/
 test/
 docker-compose.override.yml
+docker/asterisk/etc-custom
