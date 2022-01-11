@@ -9,7 +9,7 @@ COPY ./ /opt/agent/
 RUN pip3 install /opt/agent && ln -s /opt/agent/salt /srv && ln -s /opt/agent/pillar /srv
 RUN salt-call --local state.apply agent
 
-EXPOSE 40000 8000
+EXPOSE 40000 48008
 VOLUME ["/var/spool/asterisk"]
 
 ENTRYPOINT ["dumb-init"]
