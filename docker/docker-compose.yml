@@ -25,48 +25,16 @@ services:
     volumes:
       - odoo-data:/var/lib/odoo
 
-  minion:
+  agent:
     image: odoopbx/agent:1.0
     ipc: host
     restart: unless-stopped
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
-    command: salt-minion -l info
     volumes:
       - asterisk_spool:/var/spool/asterisk
-      - salt_run:/var/run/salt
     environment:
       - ODOO_DB=${ODOO_DB:-odoopbx_14}
-
-  api:
-    image: odoopbx/agent:1.0
-    ipc: host
-    depends_on:
-      - master
-    restart: unless-stopped
-    # Required to manage host's ipsets (if reactor is enabled).
-    privileged: true
-    command: salt-api -l info
-    volumes:
-      - asterisk_spool:/var/spool/asterisk
-      - salt_run:/var/run/salt
-      - ./master_api.conf:/etc/salt/master_api.conf
-
-  master:
-    image: odoopbx/agent:1.0
-    ipc: host
-    restart: unless-stopped
-    # Required to manage host's ipsets (if reactor is enabled).
-    privileged: true
-    networks:
-      default:
-        # We need static IP for master as it's set in master_api.conf in api container.
-        ipv4_address: 10.99.10.10
-    command: salt-master -l info
-    volumes:
-      - asterisk_spool:/var/spool/asterisk
-      - salt_run:/var/run/salt
-      - ./master.conf:/etc/salt/master_interface.conf
 
   asterisk:
     image: odoopbx/asterisk:16.8-cert12
@@ -97,7 +65,6 @@ services:
 volumes:
   odoo-data:
   db-data:
-  salt_run:
   asterisk_spool:
   asterisk_lib:
   asterisk_log:
@@ -106,6 +73,7 @@ volumes:
   freepbx_db:
   freepbx_data:
 
+# Define docker network as we allow login to AMI only from this network.
 networks:
   default:
     driver: bridge

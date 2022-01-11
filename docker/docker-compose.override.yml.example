@@ -12,13 +12,9 @@ services:
       #- /srv/dev/enterprise:/mnt/enterprise
     #command: sleep 10000000
 
-  minion:
-    #command: sleep 100000
+  agent:
     volumes:
       - ../:/opt/agent
-
-  master:
-    #command: salt-master -l debug
 
   asterisk:
     #command: sleep 10000000

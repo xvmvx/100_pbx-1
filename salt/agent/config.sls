@@ -52,11 +52,3 @@ agent-api-auth:
   file.managed:
     - name: /etc/salt/auth
     - contents: "odoo|0a8f125a3f41f36c0507203a63cde9ad"
-
-{% if not grains.virtual == 'container' -%}
-agent-hosts-master:
-  host.present:
-    - ip: 127.0.0.1
-    - names:
-      - master
-{% endif %}

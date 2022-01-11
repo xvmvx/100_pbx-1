@@ -12,5 +12,5 @@ RUN salt-call --local state.apply agent
 EXPOSE 40000 48008
 VOLUME ["/var/spool/asterisk"]
 
-ENTRYPOINT ["dumb-init"]
-CMD echo "Specify Salt process to run!"
+COPY ./docker/agent/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
