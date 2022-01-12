@@ -18,8 +18,15 @@ services:
 
   asterisk:
     #command: sleep 10000000
+    command: asterisk -vvvvnc
+    ports:
+      - 0.0.0.0:65060:65060/udp
+      - 0.0.0.0:10100-10200:10100-10200/udp
+      - 0.0.0.0:8089:8089
     volumes:
       - ../:/opt/agent
+      - ./asterisk/etc-custom/sip.conf:/etc/asterisk/sip.conf.md/custom.conf
+      - ./asterisk/etc-custom/extensions.conf:/etc/asterisk/extensions.conf.d/custom.conf
 
   freepbx:
     ports:
