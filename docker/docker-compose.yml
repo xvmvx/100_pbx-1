@@ -41,11 +41,7 @@ services:
     privileged: true
     restart: unless-stopped
     volumes:
-      - asterisk_etc:/etc/asterisk/
-      - asterisk_lib:/var/lib/asterisk
       - asterisk_spool:/var/spool/asterisk
-      - asterisk_log:/var/log/asterisk
-      - asterisk_run:/var/run/asterisk/
 
   freepbx:
     # https://hub.docker.com/r/tiredofit/freepbx. See also:
@@ -66,10 +62,6 @@ volumes:
   odoo-data:
   db-data:
   asterisk_spool:
-  asterisk_lib:
-  asterisk_log:
-  asterisk_etc:
-  asterisk_run:
   freepbx_db:
   freepbx_data:
 
