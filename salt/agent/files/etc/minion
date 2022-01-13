@@ -6,25 +6,9 @@ master: localhost
 autosign_grains:
   - id
 
-clean_dynamic_modules: False # Do not clean contents of extension_modules
-
-# Only load these modules.
-whitelist_modules_not_working_for_now:
-  - odoo
-  - asterisk
-  - cmd
-  - config
-  - cp
-  - event
-  - grains
-  - log
-  - mine
-  - pillar
-  - saltutil
-  - state
-  - sys
-  - test
-  - timezone
+# Do not clean contents of extension_modules
+clean_dynamic_modules: False
+extension_modules: /etc/salt/extensions
 
 # Execute startup
 startup_states: sls

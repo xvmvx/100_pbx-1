@@ -35,7 +35,8 @@ agent-pip-reqs:
       {%- endif %}
     - require:
       - agent-pkg-reqs
-    - retry: True
+    - retry:
+        attempts: 2
     - reload_modules: True
 
 agent-pip-upgrade:
