@@ -5,6 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User={{ user }}
+Environment="ODOO_RC={{ conf_path }}"
 ExecStart={{ src_path }}/odoo-bin --syslog
 Restart=on-failure
 RestartSec=10

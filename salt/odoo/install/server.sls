@@ -66,7 +66,7 @@ odoo-pip-reqs:
 
 odoo-configs:
   file.managed:
-    - name: /etc/odoo/odoo.conf
+    - name: {{ odoo.conf_path }}
     - source: salt://odoo/templates/odoo.conf
     - group: {{ odoo.user }}
     - mode: 640
@@ -79,10 +79,5 @@ odoo-environment:
   file.keyvalue:
     - name: /etc/environment
     - key: ODOO_RC
-    - value: /etc/odoo/odoo.conf
+    - value: {{ odoo.conf_path }}
     - append_if_not_found: True
-
-odoo-env:
-  environ.setenv:
-    - name: ODOO_RC
-    - value: /etc/odoo/odoo.conf

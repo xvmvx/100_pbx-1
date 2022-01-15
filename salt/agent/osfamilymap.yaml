@@ -3,9 +3,10 @@ Debian:
     - ipset
     - iptables
     - logrotate
-    - python3-m2crypto
-    - python3-psutil
     - swig
+  pypi_pkgs:
+    - M2Crypto
+    - psutil
 Alpine:
   pkgs:
     - ipset

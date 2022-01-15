@@ -7,7 +7,7 @@ RUN apt-get update \
   && pip3 install salt
 
 COPY ./ /opt/agent/
-RUN mkdir /etc/salt && ln -s /opt/agent/salt /srv && ln -s /opt/agent/pillar /srv \
+RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
   && salt-call --local state.apply agent
 
 EXPOSE 30000 48008

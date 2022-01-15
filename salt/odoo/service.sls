@@ -2,8 +2,8 @@
 
 odoo-service:
   file.managed:
-    - /etc/systemd/system/odoo.service:
-      - source: salt://odoo/templates/odoo.service
+    - name: /etc/systemd/system/odoo.service
+    - source: salt://odoo/templates/odoo.service
     - template: jinja
     - context: {{ odoo }}
     - replace: {{ odoo.force_config_update }}
