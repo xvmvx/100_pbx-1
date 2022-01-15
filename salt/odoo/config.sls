@@ -7,7 +7,7 @@ odoo-dbuser:
     - encrypted: True
     - db_user: postgres
 
-odoo-env:
+odoo-setenv:
   environ.setenv:
     - name: ODOO_RC
     - value: {{ odoo.conf_path }}
@@ -18,7 +18,7 @@ odoo-init:
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - unless: >
-        echo "env['res.users']" | 
+        echo "env['res.users']" |
         {{ odoo.src_path }}/odoo-bin shell --no-http
     - require:
       - odoo-dbuser

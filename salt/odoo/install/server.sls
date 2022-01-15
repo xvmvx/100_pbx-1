@@ -81,3 +81,8 @@ odoo-environment:
     - key: ODOO_RC
     - value: {{ odoo.conf_path }}
     - append_if_not_found: True
+
+odoo-host:
+  host.present:
+    - name: odoo
+    - ip: 127.0.0.1

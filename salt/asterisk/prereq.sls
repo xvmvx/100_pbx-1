@@ -14,3 +14,4 @@ asterisk-prereq-test:
 asterisk-prereq:
   pkg.installed:
     - pkgs: {{ pkg_list }}
+    - refresh: True
