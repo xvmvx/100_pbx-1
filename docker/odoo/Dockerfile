@@ -7,7 +7,7 @@ RUN apt update && apt install -y unzip && \
     pip3 install humanize salt-pepper lameenc SpeechRecognition
 # Download the addons.
 COPY odoo/odoo.conf /etc/odoo/odoo.conf
-RUN    curl -L https://github.com/odoopbx/addons/archive/refs/heads/${ODOO_VERSION}.zip -o /mnt/addons/${ODOO_VERSION}.zip && \
-    cd /mnt/addons/ && unzip ${ODOO_VERSION}.zip && \
-    mv addons-${ODOO_VERSION}/* . && rm -rf addons-${ODOO_VERSION} ${ODOO_VERSION}.zip
+RUN curl -L https://github.com/odoopbx/addons/archive/refs/heads/${ODOO_VERSION}.zip -o /mnt/addons/addons.zip \
+    && cd /mnt/addons/ && unzip addons.zip \
+    && mv addons-${ODOO_VERSION}/* . && rm -rf addons-${ODOO_VERSION} addons.zip
 USER odoo
