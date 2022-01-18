@@ -1,7 +1,7 @@
 name: Integration Test
 on: [push]
 jobs:
-  Install-Salt-Agent:
+  Install-Agent:
     runs-on: ubuntu-20.04
     steps:
       - run: echo "${{ github.event_name }} event in ${{ github.repository }} ${{ github.ref }}"
@@ -12,5 +12,4 @@ jobs:
       - run: sudo pip3 install salt
       - run: sudo ln -vs ${{ github.workspace }}/salt ${{ github.workspace }}/pillar /srv/
       - run: sudo salt-call --local state.apply agent
-      - run: sudo salt-call --local state.apply odoo
       - run: echo "🍏 This job's status is ${{ job.status }}."
