@@ -2,4 +2,11 @@ agent:
   log_file: "none"
   reactor_enabled: False
   running: False
-
+  pkgs:
+    - ipset
+    - iptables
+    - logrotate
+    - swig
+  pypi_pkgs:
+    - M2Crypto
+    - psutil

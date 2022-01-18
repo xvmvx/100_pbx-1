@@ -2,6 +2,7 @@ Debian:
   pkgs:
     - ipset
     - iptables
+    - libssl-dev
     - logrotate
     - swig
   pypi_pkgs:
