@@ -8,3 +8,4 @@ test/
 docker-compose.override.yml
 docker/asterisk/etc-custom
 master_custom.conf
+pillar/local.sls
