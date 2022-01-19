@@ -24,5 +24,4 @@ jobs:
           file: ./docker/odoo/Dockerfile
           push: true
           tags: litnialex/odoo:latest
-          build-args:
-            ODOO_VERSION: "14"
+          build-args: ODOO_VERSION=14
