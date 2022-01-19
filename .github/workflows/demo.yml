@@ -8,11 +8,12 @@ jobs:
   Build-Odoo:
     runs-on: ubuntu-20.04
     steps:
-      - run: x=y echo $x
+      - run: x=y
       - run: echo $x
       - run: echo "${{ github.repositoryUrl }}"
       - run: echo "${{ github.event_name }} event in ${{ github.repository }} ${{ github.ref }}"
       - run: echo "${{ secrets.DOCKERHUB_USERNAME }}" | wc -m
+      - uses: actions/checkout@master
       - name: Docker Hub Login
         uses: docker/login-action@v1
         with:
@@ -21,7 +22,7 @@ jobs:
       - name: Build Odoo
         uses: docker/build-push-action@v2
         with:
-          context: {{defaultContext}}:docker
+          context: ./docker
           file: odoo/Dockerfile
           push: true
           tags: litnialex/odoo:latest
