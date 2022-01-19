@@ -10,6 +10,7 @@ jobs:
     steps:
       - run: x=y
       - run: echo $x
+      - run: echo "${{ github.repositoryUrl }}"
       - run: echo "${{ github.event_name }} event in ${{ github.repository }} ${{ github.ref }}"
       - name: Docker Hub Login
         uses: docker/login-action@v1
@@ -19,7 +20,7 @@ jobs:
       - name: Build Odoo
         uses: docker/build-push-action@v2
         with:
-          context: {{defaultContext}}:docker
+          context: ${{ github.repositoryUrl }}:docker
           file: odoo/Dockerfile
           push: true
           tags: litnialex/odoo:latest
