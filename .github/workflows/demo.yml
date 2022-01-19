@@ -21,6 +21,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./docker
-          file: odoo/Dockerfile
+          file: ./docker/odoo/Dockerfile
           push: true
           tags: litnialex/odoo:latest
+          build-args:
+            - ODOO_VERSION: "14"
