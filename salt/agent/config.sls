@@ -45,7 +45,3 @@ agent-api-auth:
     - name: /etc/salt/auth
     - contents: "odoo|0a8f125a3f41f36c0507203a63cde9ad"
 
-agent-host:
-  host.present:
-    - name: agent
-    - ip: 127.0.0.1
