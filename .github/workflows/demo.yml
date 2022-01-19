@@ -25,4 +25,4 @@ jobs:
           push: true
           tags: litnialex/odoo:latest
           build-args:
-            - ODOO_VERSION: "14"
+            ODOO_VERSION: "14"
