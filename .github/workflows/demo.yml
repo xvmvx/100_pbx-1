@@ -14,6 +14,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v2
       - run: cd ${{ github.workspace }}/docker
+      - run: pwd
       - run: sudo docker-compose -f docker-compose.dev.yml -f docker-compose.override.yml build odoo
       - run: sudo docker image inspect litnialex/odoo:latest
       - uses: docker/login-action@v1
