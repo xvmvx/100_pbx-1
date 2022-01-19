@@ -12,12 +12,12 @@ jobs:
       - run: echo $x
       - run: echo "${{ github.repositoryUrl }}"
       - run: echo "${{ github.event_name }} event in ${{ github.repository }} ${{ github.ref }}"
-      - run: echo "${{ secrets.DOCKERHUB_USERNAME }} asdf ${{ secrets.t1env.DOCKERHUB_USERNAME }}"
+      - run: echo "${{ secrets.DOCKERHUB_USERNAME }}" | wc -m
       - name: Docker Hub Login
         uses: docker/login-action@v1
         with:
-          username: litnialex
-          password: be83d663-0434-43af-950d-f3cc0c5be92f
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
       - name: Build Odoo
         uses: docker/build-push-action@v2
         with:
