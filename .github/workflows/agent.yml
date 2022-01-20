@@ -6,6 +6,7 @@ on:
     paths:
       - salt/agent/**
       - docker/agent/**
+      - .github/workflows/agent.yml
 
 jobs:
   Build:

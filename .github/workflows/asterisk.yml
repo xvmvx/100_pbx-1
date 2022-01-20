@@ -6,6 +6,7 @@ on:
     paths:
       - salt/asterisk/**
       - docker/asterisk/**
+      - .github/workflows/asterisk.yml
 
 jobs:
   Build:
