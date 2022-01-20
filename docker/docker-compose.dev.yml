@@ -10,13 +10,13 @@ services:
         ODOO_VERSION: ${ODOO_VERSION:-14}
   
   agent:
-    image: odoopbx/agent:${AGENT_VERSION:-latest}
+    image: odoopbx/agent:1.0
     build:
       dockerfile: ./docker/agent/Dockerfile
       context: ../
 
   asterisk:
-    image: odoopbx/asterisk:${ASTERISK_VERSION:-16.8-cert12}
+    image: odoopbx/asterisk:16.8-cert12
     build:
       dockerfile: ./docker/asterisk/Dockerfile
       context: ..
