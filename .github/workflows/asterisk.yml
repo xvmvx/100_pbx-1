@@ -22,4 +22,6 @@ jobs:
           context: ./
           file: ./docker/asterisk/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/asterisk:latest
+          tags: |
+            ${{ github.repository_owner }}/asterisk:16.8-cert12
+            ${{ github.repository_owner }}/asterisk:latest
