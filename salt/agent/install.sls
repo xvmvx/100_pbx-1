@@ -28,11 +28,9 @@ agent-pip-reqs:
       - cherrypy
       - 'panoramisk @ https://github.com/litnimax/panoramisk/archive/master.zip'
       - odoorpc
-      {%- if agent.pypi_pkgs | d(False) %}
       {%- for item in agent.pypi_pkgs %}
       - {{ item }}
       {%- endfor %}
-      {%- endif %}
     - require:
       - agent-pkg-reqs
     - retry:
