@@ -1,8 +1,8 @@
 FROM ubuntu:20.04
 
 # Install prerequisites
-RUN apt update && \
-    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y ssl-cert tzdata python3-pip tmux vim iputils-ping \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install ssl-cert tzdata python3-pip tmux vim iputils-ping \
     && pip3 install salt
  
 # Install Agent
