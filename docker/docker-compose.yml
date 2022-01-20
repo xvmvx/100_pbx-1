@@ -64,11 +64,3 @@ volumes:
   asterisk_spool:
   freepbx_db:
   freepbx_data:
-
-# Define docker network as we allow login to AMI only from this network.
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.99.10.0/24
