@@ -10,8 +10,3 @@ asterisk-install:
     - name: WGET_EXTRA_ARGS="-q" make install
     - cwd: {{ asterisk.src_dir }}
     - creates: /usr/sbin/asterisk
-
-asterisk-progdocs:
-  cmd.run:
-    - name: make progdocs
-    - cwd: {{ asterisk.src_dir }}

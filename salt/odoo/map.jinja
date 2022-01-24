@@ -5,14 +5,3 @@
   merge=salt['config.get']('odoo', merge='recurse'),
   base='odoo')
 %}
-
-{% do odoo.update({'major_version': odoo.version.split('.')[0]}) %}
-
-{% do odoo.update({'path': {
-    'src': odoo.prefix ~ '/' ~ odoo.version ~ '/src',
-    'venv': odoo.prefix ~ '/' ~ odoo.version ~ '/venv',
-    'data': odoo.prefix ~ '/' ~ odoo.version ~ '/data',
-    'addons': odoo.prefix ~ '/' ~ odoo.version ~ '/addons',
-    'conf': '/etc/odoo/odoo' ~ odoo.major_version  ~ '.conf',
-}}) %}
-

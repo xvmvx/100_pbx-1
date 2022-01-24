@@ -3,5 +3,9 @@ odoo:
   dbname: demo
   user: odoo
   admin_passwd: odoopbx
-  prefix: /srv/odoo
-  upgrade: True
+  src_path: /srv/odoo
+  data_path: /var/lib/odoo
+  addons_path: /mnt/addons
+  conf_path: /etc/odoo/odoo.conf
+  force_update: False
+  force_config_update: False

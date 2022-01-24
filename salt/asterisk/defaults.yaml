@@ -16,8 +16,8 @@ asterisk:
     - cdr_syslog
     - chan_sip
     - codec_opus
-    - BUILD_NATIVE
   menuselect_disable:
+    - BUILD_NATIVE
     - CORE-SOUNDS-EN-GSM
     - pbx_dundi
   configure_options: --with-pjproject-bundled --with-jansson-bundled --exec-prefix=/usr

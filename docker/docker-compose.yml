@@ -9,7 +9,7 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     restart: unless-stopped
     volumes:
-      - db-data:/var/lib/postgresql/data/pgdata
+      - db_data:/var/lib/postgresql/data/pgdata
 
   odoo:
     depends_on:
@@ -23,7 +23,7 @@ services:
     - PASSWORD=odoo
     - DATABASE=${ODOO_DB:-odoopbx_14}
     volumes:
-      - odoo-data:/var/lib/odoo
+      - odoo_data:/var/lib/odoo
 
   agent:
     image: odoopbx/agent:1.0
@@ -59,16 +59,8 @@ services:
 
 
 volumes:
-  odoo-data:
-  db-data:
+  odoo_data:
+  db_data:
   asterisk_spool:
   freepbx_db:
   freepbx_data:
-
-# Define docker network as we allow login to AMI only from this network.
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.99.10.0/24

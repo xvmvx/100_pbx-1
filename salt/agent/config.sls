@@ -13,8 +13,6 @@ agent-etc-files:
         - exclude_pat:
           - minion
           - master
-      - /var/cache/salt/minion/extmods:
-        - source: salt://agent/files/extensions
 
 agent-conf-files:
   file.managed:
@@ -42,13 +40,8 @@ agent-autosign-config:
     - target: /etc/salt/minion_id
     - makedirs: True
 
-install-pki-dir:
-  file.directory:
-    - name: /etc/salt/pki/install
-    - dir_mode: 700
-    - makedirs: True
-
 agent-api-auth:
   file.managed:
     - name: /etc/salt/auth
     - contents: "odoo|0a8f125a3f41f36c0507203a63cde9ad"
+

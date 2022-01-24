@@ -1,8 +1,3 @@
-agent:
-  log_file: "none"
-  reactor_enabled: False
-  running: False
-
 asterisk:
   force_update: True
   lookup:
