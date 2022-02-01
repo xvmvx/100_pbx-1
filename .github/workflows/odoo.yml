@@ -4,7 +4,6 @@ on:
     branches:
       - master
     paths:
-      - salt/odoo/**
       - docker/odoo/**
       - .github/workflows/odoo.yml
 
