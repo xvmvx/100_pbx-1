@@ -32,10 +32,10 @@ odoo-make-dirs:
     - names:
       - {{ odoo.data_path }}/filestore:
         - user: {{ odoo.user }}
+        - dir_mode: 750
       - {{ odoo.addons_path }}:
         - group: {{ odoo.user }}
     - makedirs: True
-    - dir_mode: 750
 
 odoo-cloned:
   git.latest:
