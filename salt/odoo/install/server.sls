@@ -81,4 +81,3 @@ odoo-environment:
     - key: ODOO_RC
     - value: {{ odoo.conf_path }}
     - append_if_not_found: True
-

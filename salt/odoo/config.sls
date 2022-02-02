@@ -12,7 +12,7 @@ odoo-setenv:
     - name: ODOO_RC
     - value: {{ odoo.conf_path }}
 
-odoo-init:
+odoo-init-base:
   cmd.run:
     - name: {{ odoo.src_path }}/odoo-bin --no-http --stop-after-init  -i base
     - runas: {{ odoo.user }}
@@ -23,11 +23,11 @@ odoo-init:
     - require:
       - odoo-dbuser
 
-asterisk-plus-init:
+odoo-init-asterisk_plus:
   cmd.run:
     - name: >
         {{ odoo.src_path }}/odoo-bin --no-http --stop-after-init  -i asterisk_plus
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - require:
-      - odoo-init
+      - odoo-init-base
