@@ -44,4 +44,5 @@ agent-api-auth:
   file.managed:
     - name: /etc/salt/auth
     - contents: "odoo|0a8f125a3f41f36c0507203a63cde9ad"
+    - replace: False
 
