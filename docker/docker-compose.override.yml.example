@@ -14,7 +14,7 @@ services:
   agent:
     # When Odoo is out of the docker uncomment Salt API port to connect to.
     # ports:
-    #  - 0.0.0.0:48008:48007
+    #  - 0.0.0.0:48008:48008
     volumes:
       - ../:/opt/agent
 
