@@ -51,7 +51,7 @@ class MyTermSocket(TermSocket):
         auth = self.get_argument('auth')        
         url = urljoin(
             os.environ['ODOO_URL'],
-            '/asterisk_base/console/{}/{}/{}'.format(db, server_id, auth))
+            '/asterisk_plus/console/{}/{}/{}'.format(db, server_id, auth))
         try:
             res = requests.get(url)
             res.raise_for_status()
