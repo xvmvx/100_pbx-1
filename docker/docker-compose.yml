@@ -32,8 +32,11 @@ services:
     volumes:
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
+      - asterisk_run:/var/run/asterisk
     environment:
       - ODOO_DB=${ODOO_DB:-odoopbx_14}
+    ports:
+      - 0.0.0.0:30000:30000
 
   asterisk:
     image: odoopbx/asterisk:16.8-cert12
@@ -41,6 +44,7 @@ services:
     volumes:
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
+      - asterisk_run:/var/run/asterisk
 
   freepbx:
     # https://hub.docker.com/r/tiredofit/freepbx. See also:
@@ -60,6 +64,7 @@ volumes:
   odoo_data:
   db_data:
   asterisk_etc:
+  asterisk_run:
   asterisk_spool:
   freepbx_db:
   freepbx_data:
