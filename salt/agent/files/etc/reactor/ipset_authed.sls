@@ -1,14 +1,18 @@
+{% if data.data.get('RemoteAddress') %}
 ipset-add-authenticated:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
             ipset add -exist authenticated
-            {{ data.RemoteAddress.split('/')[2] }}
-            comment "{{ data.get('Service') ~ ' ' ~ data.get('Event') }}
-            {{ data.get('AccountID') }}"
+            {{ data.data.RemoteAddress.split('/')[2] }}
+            comment "{{ data.data.get('Service') ~ ' ' ~ data.data.get('Event') }}
+            {{ data.data.get('AccountID') }}"
 
 ipset-del-expire_long:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
-            ipset del -exist expire_long {{ data.RemoteAddress.split('/')[2] }}
+            ipset del -exist expire_long {{ data.data.RemoteAddress.split('/')[2] }}
+{% endif %}
