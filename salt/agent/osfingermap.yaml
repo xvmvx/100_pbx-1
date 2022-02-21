@@ -6,6 +6,7 @@ CentOS Linux-7:
     - python36-m2crypto
     - python36-psutil
     - swig
+  pypi_pkgs: []
   locale: en_US.utf8
 Issabel PBX-7:
   pkgs:
@@ -15,6 +16,7 @@ Issabel PBX-7:
     - python36-m2crypto
     - python36-psutil
     - swig
+  pypi_pkgs: []
   locale: en_US.utf8
 CentOS Linux-8:
   pkgs:
@@ -24,6 +26,7 @@ CentOS Linux-8:
     - python3-m2crypto
     - python3-psutil
     - swig
+  pypi_pkgs: []
 Sangoma Linux-7:
   pkgs:
     - ipset

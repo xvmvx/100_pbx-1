@@ -9,13 +9,12 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     restart: unless-stopped
     volumes:
-      - db-data:/var/lib/postgresql/data/pgdata
+      - db_data:/var/lib/postgresql/data/pgdata
 
   odoo:
     depends_on:
       - db
     image: odoopbx/odoo:${ODOO_VERSION:-14}
-    restart: unless-stopped
     command: odoo -d ${ODOO_DB:-odoopbx_14}
     environment:
     - HOST=db
@@ -23,31 +22,34 @@ services:
     - PASSWORD=odoo
     - DATABASE=${ODOO_DB:-odoopbx_14}
     volumes:
-      - odoo-data:/var/lib/odoo
+      - odoo_data:/var/lib/odoo
 
   agent:
     image: odoopbx/agent:1.0
     ipc: host
-    restart: unless-stopped
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
       - asterisk_spool:/var/spool/asterisk
+      - asterisk_etc:/etc/asterisk
+      - asterisk_run:/var/run/asterisk
     environment:
       - ODOO_DB=${ODOO_DB:-odoopbx_14}
+    ports:
+      - 0.0.0.0:30000:30000
 
   asterisk:
     image: odoopbx/asterisk:16.8-cert12
     privileged: true
-    restart: unless-stopped
     volumes:
       - asterisk_spool:/var/spool/asterisk
+      - asterisk_etc:/etc/asterisk
+      - asterisk_run:/var/run/asterisk
 
   freepbx:
     # https://hub.docker.com/r/tiredofit/freepbx. See also:
     # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
     image: tiredofit/freepbx
-    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     privileged: True
@@ -59,16 +61,10 @@ services:
 
 
 volumes:
-  odoo-data:
-  db-data:
+  odoo_data:
+  db_data:
+  asterisk_etc:
+  asterisk_run:
   asterisk_spool:
   freepbx_db:
   freepbx_data:
-
-# Define docker network as we allow login to AMI only from this network.
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.99.10.0/24

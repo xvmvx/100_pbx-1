@@ -7,8 +7,7 @@
   daily
   missingok
   notifempty
-  rotate 60
-  maxage 90
+  rotate 7
   delaycompress
   copytruncate
   dateext

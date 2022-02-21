@@ -3,30 +3,31 @@ services:
 
   odoo:
     ports:
-      - 0.0.0.0:8069:8069
       - 0.0.0.0:8072:8072
     volumes:
       - ./odoo/odoo.conf:/etc/odoo/odoo.conf
-      - /srv/dev/addons/:/mnt/addons
+      - ../../addons/:/mnt/addons
       #- /srv/dev/addons_ee:/mnt/addons_ee
       #- /srv/dev/enterprise:/mnt/enterprise
-    #command: sleep 10000000
+    #command: sleep 100d
 
   agent:
+    # When Odoo is out of the docker uncomment Salt API port to connect to.
+    # ports:
+    #  - 0.0.0.0:48008:48008
     volumes:
       - ../:/opt/agent
 
   asterisk:
-    #command: sleep 10000000
-    command: asterisk -vvvvnc
     ports:
       - 0.0.0.0:65060:65060/udp
       - 0.0.0.0:10100-10200:10100-10200/udp
       - 0.0.0.0:8089:8089
     volumes:
       - ../:/opt/agent
-      - ./asterisk/etc-custom/sip.conf:/etc/asterisk/sip.conf.d/custom.conf
-      - ./asterisk/etc-custom/extensions.conf:/etc/asterisk/extensions.conf.d/custom.conf
+      - asterisk_etc:/etc/asterisk    # volume from docker-compose.yml
+      #- /etc/asterisk:/etc/asterisk  # host directory /etc/asterisk
+    #command: sleep 100d
 
   freepbx:
     ports:

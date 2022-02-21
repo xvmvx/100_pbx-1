@@ -1,18 +1,22 @@
+{% if data.data.get('RemoteAddress') %}
 ipset-add-expire_short:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
             ipset add -quiet expire_short
-            {{ data.RemoteAddress.split('/')[2] }}
-            comment "{{ data.get('Service') ~ ' ' ~ data.get('Event') }}
-            {{ data.get('AccountID') }}"
+            {{ data.data.RemoteAddress.split('/')[2] }}
+            comment "{{ data.data.get('Service') ~ ' ' ~ data.data.get('Event') }}
+            {{ data.data.get('AccountID') }}"
         - ignore_retcode: True
 
 ipset-add-expire_long:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
             ipset add -exist expire_long
-            {{ data.RemoteAddress.split('/')[2] }}
-            comment "{{ data.get('Service') ~ ' ' ~ data.get('Event') }}
-            {{ data.get('AccountID') }}"
+            {{ data.data.RemoteAddress.split('/')[2] }}
+            comment "{{ data.data.get('Service') ~ ' ' ~ data.data.get('Event') }}
+            {{ data.data.get('AccountID') }}"
+{% endif %}

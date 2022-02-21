@@ -5,6 +5,8 @@ on:
       - master
     paths:
       - salt/agent/**
+      - docker/agent/**
+      - .github/workflows/agent.yml
 
 jobs:
   Build:
@@ -20,4 +22,6 @@ jobs:
           context: ./
           file: ./docker/agent/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/agent:latest
+          tags: |
+            ${{ github.repository_owner }}/agent:1.0
+            ${{ github.repository_owner }}/agent:latest

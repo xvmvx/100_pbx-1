@@ -33,3 +33,5 @@ asterisk:
     - ssl-cert
   force_update: False
   force_config_update: False
+  manager_bindaddr: 127.0.0.1
+  http_tlsbindaddr: 127.0.0.1

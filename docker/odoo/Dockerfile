@@ -1,6 +1,8 @@
 ARG ODOO_VERSION
 FROM odoo:${ODOO_VERSION}
 # Note! Odoo images set own ODOO_VERSION value. So if set ODOO_VERSION=14 as build ARG it is 14.0 after FROM instruction.
+# Check https://github.com/odoo/docker/blob/master/14.0/Dockerfile for details
+
 USER root
 COPY odoo/odoo.conf /etc/odoo/odoo.conf
 RUN apt-get update && apt-get install -y unzip \
