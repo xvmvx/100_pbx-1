@@ -16,45 +16,45 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN}}
-      - name: Build and push odoo 15
+      - name: Build and push odoo 15.0
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/odoo/Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/odoo:15
-            ${{ github.repository_owner }}/odoo:latest
-          build-args: ODOO_VERSION=15
-      - name: Build and push odoo 14
+            ${{ github.repository_owner }}/odoo:15.0-build
+            ${{ github.repository_owner }}/odoo:latest-build
+          build-args: ODOO_VERSION=15.0
+      - name: Build and push odoo 14.0
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/odoo/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/odoo:14
-          build-args: ODOO_VERSION=14
-      - name: Build and push odoo 13
+          tags: ${{ github.repository_owner }}/odoo:14.0-build
+          build-args: ODOO_VERSION=14.0
+      - name: Build and push odoo 13.0
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/odoo/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/odoo:13
-          build-args: ODOO_VERSION=13
-      - name: Build and push odoo 12
+          tags: ${{ github.repository_owner }}/odoo:13.0-build
+          build-args: ODOO_VERSION=13.0
+      - name: Build and push odoo 12.0
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/odoo/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/odoo:12
-          build-args: ODOO_VERSION=12
-      - name: Build and push odoo 11
+          tags: ${{ github.repository_owner }}/odoo:12.0-build
+          build-args: ODOO_VERSION=12.0
+      - name: Build and push odoo 11.0
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/odoo/Dockerfile
           push: true
-          tags: ${{ github.repository_owner }}/odoo:11
-          build-args: ODOO_VERSION=11
+          tags: ${{ github.repository_owner }}/odoo:11.0-build
+          build-args: ODOO_VERSION=11.0
