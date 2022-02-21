@@ -4,12 +4,12 @@ services:
   odoo:
     image: odoopbx/odoo:${ODOO_VERSION:-14}
     build:
-      dockerfile: ./odoo/Dockerfile
-      context: ./
+      dockerfile: .agent/docker/odoo/Dockerfile
+      context: ../../
       args:
         ODOO_VERSION: ${ODOO_VERSION:-14}
         # path to addons dir relatively to context
-        ADDONS_SRC: ../../addons
+        ADDONS_SRC: ./addons
   
   agent:
     image: odoopbx/agent:1.0
@@ -21,4 +21,4 @@ services:
     image: odoopbx/asterisk:16.8-cert12
     build:
       dockerfile: ./docker/asterisk/Dockerfile
-      context: ..
+      context: ../
