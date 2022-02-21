@@ -10,7 +10,7 @@ services:
         ODOO_VERSION: ${ODOO_VERSION:-14}
   
   agent:
-    image: odoopbx/agent:${AGENT_VERSION:-latest}
+    image: odoopbx/agent:1.0
     build:
       dockerfile: ./docker/agent/Dockerfile
       context: ../
