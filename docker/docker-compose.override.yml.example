@@ -2,10 +2,7 @@ version: '3.1'
 services:
 
   odoo:
-    ports:
-      - 0.0.0.0:8072:8072
     volumes:
-      - ./odoo/odoo.conf:/etc/odoo/odoo.conf
       - ../../addons/:/mnt/addons
       #- /srv/dev/addons_ee:/mnt/addons_ee
       #- /srv/dev/enterprise:/mnt/enterprise
@@ -19,13 +16,8 @@ services:
       - ../:/opt/agent
 
   asterisk:
-    ports:
-      - 0.0.0.0:65060:65060/udp
-      - 0.0.0.0:10100-10200:10100-10200/udp
-      - 0.0.0.0:8089:8089
     volumes:
       - ../:/opt/agent
-      - asterisk_etc:/etc/asterisk    # volume from docker-compose.yml
       #- /etc/asterisk:/etc/asterisk  # host directory /etc/asterisk
     #command: sleep 100d
 
