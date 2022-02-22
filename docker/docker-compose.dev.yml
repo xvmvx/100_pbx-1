@@ -4,11 +4,10 @@ services:
   odoo:
     image: odoopbx/odoo:${ODOO_VERSION:-14}
     build:
-      dockerfile: ./odoo/Dockerfile
-      context: ./
+      context: ../../addons
       args:
         ODOO_VERSION: ${ODOO_VERSION:-14}
-  
+
   agent:
     image: odoopbx/agent:1.0
     build:

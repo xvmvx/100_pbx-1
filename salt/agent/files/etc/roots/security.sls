@@ -1,4 +1,4 @@
-{% if 'reactor' in salt['config.get']('engines') %}
+{% if salt['config.get']('ami_reactor_enabled') %}
 
 security-ipset-whitelist:
   ipset.set_present:

@@ -1,21 +1,26 @@
+{% if data.data.get('RemoteAddress') %}
 ipset-add-banned:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
-            ipset add -exist banned {{ data.RemoteAddress.split('/')[2] }}
-            comment "{{ data.get('Service') ~ ' ' ~ data.get('Event') }}
-            {{ data.get('AccountID') }}"
+            ipset add -exist banned {{ data.data.RemoteAddress.split('/')[2] }}
+            comment "{{ data.data.get('Service') ~ ' ' ~ data.data.get('Event') }}
+            {{ data.data.get('AccountID') }}"
 
 log-banned:
-  caller.log.warning:
+  local.log.warning:
+    - tgt: {{ data.id }}
     - args:
         - message: >
-            IP {{ data.RemoteAddress.split('/')[2] }} banned.
-            {{ data.get('Service') ~ ' ' ~ data.get('Event') }}
-            {{ data.get('AccountID') }}
+            IP {{ data.data.RemoteAddress.split('/')[2] }} banned.
+            {{ data.data.get('Service') ~ ' ' ~ data.data.get('Event') }}
+            {{ data.data.get('AccountID') }}
 
 ipset-del-expire_long:
-  caller.cmd.run:
+  local.cmd.run:
+    - tgt: {{ data.id }}
     - args:
         - cmd: >
-            ipset del -exist expire_long {{ data.RemoteAddress.split('/')[2] }}
+            ipset del -exist expire_long {{ data.data.RemoteAddress.split('/')[2] }}
+{% endif %}
