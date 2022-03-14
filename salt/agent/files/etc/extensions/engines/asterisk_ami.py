@@ -35,7 +35,7 @@ class AmiClient:
 
     async def start(self):
         self.event = salt.utils.event.MinionEvent(__opts__)
-        self.ami_fire_events = __salt__['config.get']('ami_fire_events')
+        self.security_reactor_events = __salt__['config.get']('security_reactor_events')
         # Set trace option
         self.odoo_trace_ami = __salt__['config.get']('odoo_trace_ami')
         # Set process name
@@ -88,7 +88,7 @@ class AmiClient:
             # We do it forever until we finally receive it.
             try:
                 events_map = __salt__['odoo.execute'](
-                    __salt__['config.get']('odoo_events_model'),
+                    'asterisk_plus.event',
                     'search_read',
                     [[['is_enabled', '=', True], ['source', '=', 'AMI']]],
                     {'fields': ['name','model', 'method', 'delay', 'condition']},
@@ -115,7 +115,7 @@ class AmiClient:
         # Inject system name in every message
         event['SystemName'] = __grains__['id']
         # Send event to Salt's event bus
-        if event['Event'] in self.ami_fire_events and __salt__['config.get']('ami_reactor_enabled'):
+        if event['Event'] in self.security_reactor_events and __salt__['config.get']('ami_reactor_enabled'):
             __salt__['event.send']('ami_event/{}'.format(event['Event']), event)
         # Check if it is a special OdooExecute UserEvent
         if event['Event'] == 'UserEvent' and event['UserEvent'] == 'OdooExecute':
@@ -254,10 +254,4 @@ class AmiClient:
 
 
 def start():
-    if __salt__['config.get']('ami_enabled'):
-        log.info('Starting Asterisk AMI engine.')
-        run(AmiClient().start())
-    else:
-        log.info('Asterisk AMI not enabled.')
-        time.sleep(3600*24*365*100) # Sleep 100 years otherwise Salt process manager will restart me.
-    
+    run(AmiClient().start())

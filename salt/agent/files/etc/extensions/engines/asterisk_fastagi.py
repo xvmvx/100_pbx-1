@@ -64,9 +64,4 @@ def fastagi_start():
 
 
 def start():
-    if __salt__['config.get']('fastagi_enabled'):
-        log.info('Starting Asterisk FastAGI engine.')
-        return fastagi_start()
-    else:
-        log.info('Asterisk FastAGI not enabled.')
-        time.sleep(3600*24*365*100) # Sleep 100 years otherwise Salt process manager will restart me.
+    fastagi_start()
