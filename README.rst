@@ -16,4 +16,6 @@ Clone the repo and install from it:
   git clone git@github.com:odoopbx/agent.git
   cd agent
   pip3 install .
-
+  mv salt /srv/
+  mv pillar /srv
+  salt-call --local state.apply agent

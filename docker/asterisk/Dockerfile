@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # Install prerequisites
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install dumb-init ssl-cert tzdata \
-    python3-pip tmux vim iputils-ping net-tools tcpdump sngrep ngrep screen  \
+    python3-pip tmux vim iputils-ping net-tools tcpdump sngrep ngrep screen sudo \
     && pip3 install salt
  
 # Install Asterisk

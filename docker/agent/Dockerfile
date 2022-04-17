@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # Install prerequisites
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install dumb-init ssl-cert tzdata asterisk \
-    python3-pip tmux vim iputils-ping \
+    python3-pip tmux vim iputils-ping sudo \
     && pip3 install salt
 
 # Install Agent
