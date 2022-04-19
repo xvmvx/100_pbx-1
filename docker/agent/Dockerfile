@@ -1,9 +1,11 @@
 FROM ubuntu:20.04
 
 # Install prerequisites
+# jinja==3.0.3 until next release salt-3004.2
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install dumb-init ssl-cert tzdata asterisk \
     python3-pip tmux vim iputils-ping sudo \
+    && pip3 install jinja2==3.0.3 \
     && pip3 install salt
 
 # Install Agent
