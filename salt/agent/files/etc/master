@@ -71,7 +71,7 @@ reactor_niceness: 9
 # Master reactor threads, default ``64``.
 reactor_worker_threads: 64
 ###
-# List of reactor patterns. See `Salt reactor docs <https://docs.saltproject.io/en/latest/topics/reactor/index.html`__ for details.
+# List of reactor patterns. See `Salt reactor docs <https://docs.saltproject.io/en/latest/topics/reactor/index.html>`__ for details.
 reactor:
   - 'ami_event/ChallengeSent':
       - /etc/salt/reactor/ipset_expire.sls

@@ -35,8 +35,6 @@ services:
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
       - asterisk_run:/var/run/asterisk
-    environment:
-      - ODOO_DB=${ODOO_DB:-odoopbx_14}
     ports:
       - 0.0.0.0:30000:30000
 
