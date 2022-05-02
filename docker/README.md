@@ -17,5 +17,5 @@ Instead add your custom settings to your ``docker-compose.override.yml``.
 ## Building
 To build the images locally use ``docker-compose.dev.yml`` file like the following:
 ```
-docker-compose -f docker-compose.dev.yml build odoo asterisk agent
+ODOO_VERSION=15 ODOO_DB=odoopbx_15 docker-compose -f docker-compose.dev.yml build
 ```
