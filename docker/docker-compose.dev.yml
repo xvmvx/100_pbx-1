@@ -2,11 +2,11 @@ version: '3.1'
 services:
 
   odoo:
-    image: odoopbx/odoo:${ODOO_VERSION:-14}
+    image: odoopbx/odoo:${ODOO_VERSION:-15.0}
     build:
       context: ../../addons
       args:
-        ODOO_VERSION: ${ODOO_VERSION:-14}
+        ODOO_VERSION: ${ODOO_VERSION:-15.0}
 
   agent:
     image: odoopbx/agent:1.0
