@@ -8,14 +8,8 @@ services:
       args:
         ODOO_VERSION: ${ODOO_VERSION:-15.0}
 
-  agent:
-    image: odoopbx/agent:1.0
+  pbx:
+    image: odoopbx/pbx:latest
     build:
-      dockerfile: ./docker/agent/Dockerfile
+      dockerfile: ./docker/Dockerfile
       context: ../
-
-  asterisk:
-    image: odoopbx/asterisk:16.8-cert12
-    build:
-      dockerfile: ./docker/asterisk/Dockerfile
-      context: ..

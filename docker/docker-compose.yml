@@ -28,11 +28,12 @@ services:
       - 0.0.0.0:8072:8072
 
   agent:
-    image: odoopbx/agent:1.0
+    image: odoopbx/pbx
     ipc: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
+      - ./salt.conf:/etc/supervisor/conf.d/salt.conf
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
       - asterisk_run:/var/run/asterisk
@@ -43,9 +44,10 @@ services:
 
 
   asterisk:
-    image: odoopbx/asterisk:16.8-cert12
+    image: odoopbx/pbx
     privileged: true
     volumes:
+      - ./asterisk.conf:/etc/supervisor/conf.d/asterisk.conf
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
       - asterisk_run:/var/run/asterisk
