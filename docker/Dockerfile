@@ -14,18 +14,10 @@ RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
     && salt-call --local state.apply agent \
     && salt-call --local state.apply asterisk
 
-#sate-engine listener for asterisk CLI
-EXPOSE 30000
-#salt-api
-EXPOSE 48008
-#asterisk AMI
-EXPOSE 5038
-#asterisk WebRTC
-EXPOSE 8089
-#asterisk SIP UDP
-EXPOSE 65060
-
 VOLUME ["/var/spool/asterisk"]
+
+RUN mv /usr/src/asterisk/configs /usr/local/asterisk-configs \
+    && rm -rf /usr/src/asterisk
 
 COPY ./docker/supervisord.conf /etc/supervisor/
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
