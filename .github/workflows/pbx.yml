@@ -1,12 +1,14 @@
-name: Agent
+name: PBX
 on:
   push:
     branches:
       - master
     paths:
+      - salt/asterisk/**
       - salt/agent/**
+      - docker/asterisk/**
       - docker/agent/**
-      - .github/workflows/agent.yml
+      - .github/workflows/pbx.yml
 
 jobs:
   Build:
@@ -20,8 +22,8 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./docker/agent/Dockerfile
+          file: ./docker/Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/agent:1.0
-            ${{ github.repository_owner }}/agent:latest
+            ${{ github.repository_owner }}/pbx:1.0
+            ${{ github.repository_owner }}/pbx:latest

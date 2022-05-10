@@ -2,6 +2,7 @@ version: '3.1'
 services:
 
   db:
+    hostname: db
     image: postgres:12
     environment:
       - POSTGRES_PASSWORD=odoo
@@ -12,6 +13,7 @@ services:
       - db_data:/var/lib/postgresql/data/pgdata
 
   odoo:
+    hostname: odoo
     depends_on:
       - db
     image: odoopbx/odoo:${ODOO_VERSION:-15.0}
@@ -28,33 +30,42 @@ services:
       - 0.0.0.0:8072:8072
 
   agent:
-    image: odoopbx/agent:1.0
+    hostname: agent
+    image: odoopbx/pbx
     ipc: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
+      - ./salt.conf:/etc/supervisor/conf.d/salt.conf
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
       - asterisk_run:/var/run/asterisk
     ports:
+      # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
     environment:
       - ODOO_DB
 
 
   asterisk:
-    image: odoopbx/asterisk:16.8-cert12
+    hostname: asterisk
+    image: odoopbx/pbx
     privileged: true
     volumes:
+      - ./asterisk.conf:/etc/supervisor/conf.d/asterisk.conf
       - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
       - asterisk_run:/var/run/asterisk
     ports:
+      # SIP UDP transport (pjsip.conf)
       - 0.0.0.0:65060:65060/udp
+      # RTP media ports (rtp.conf)
       - 0.0.0.0:10100-10200:10100-10200/udp
+      # HTTP TLS for WebRTC (http.conf)
       - 0.0.0.0:8089:8089
 
   freepbx:
+    hostname: freepbx
     # https://hub.docker.com/r/tiredofit/freepbx. See also:
     # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
     image: tiredofit/freepbx
