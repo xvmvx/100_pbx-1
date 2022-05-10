@@ -53,10 +53,10 @@ rest_cherrypy:
   ssl_key: /etc/pki/current/privkey.pem
   ###
   # Access log file path, default ``/var/log/salt/api_access``.
-  log_access_file: {{ log_file }}
+  log_access_file: none
   ###
   # Error log file path, ``/var/log/salt/api_errors``.
-  log_error_file: {{ log_file }}
+  log_error_file: none
   ###
   # Debug mode, default ``False``.
   debug: False
