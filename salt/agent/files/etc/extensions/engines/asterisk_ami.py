@@ -115,7 +115,7 @@ class AmiClient:
         # Inject system name in every message
         event['SystemName'] = __grains__['id']
         # Send event to Salt's event bus
-        if event['Event'] in self.security_reactor_events and __salt__['config.get']('ami_reactor_enabled'):
+        if event['Event'] in self.security_reactor_events and __salt__['config.get']('security_reactor_enabled'):
             __salt__['event.send']('ami_event/{}'.format(event['Event']), event)
         # Check if it is a special OdooExecute UserEvent
         if event['Event'] == 'UserEvent' and event['UserEvent'] == 'OdooExecute':
