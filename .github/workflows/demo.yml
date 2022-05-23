@@ -5,18 +5,32 @@ on:
       - master
     paths:
       - salt/**
-      - docker/**
+      - docker/demo/**
       - .github/workflows/demo.yml
 
 
 jobs:
+  demo15:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./docker/demo/Dockerfile
+          push: true
+          tags: |
+            ${{ github.repository_owner }}/demo:15.0
+          build-args: |
+            ODOO_DB=odoopbx_15
+            ODOO_VERSION=15.0
   demo14:
     runs-on: ubuntu-20.04
-    env:
-      ODOO_DB: odoopbx_14
-      ODOO_VERSION: "14.0"
     steps:
-      - run: echo ${{ ODOO_DB }} "$ODOO_VERSION" '$ODOO_VERSION'
       - uses: actions/checkout@master
       - uses: docker/login-action@v1
         with:
@@ -28,14 +42,13 @@ jobs:
           file: ./docker/demo/Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/demo:${{ env.ODOO_VERSION }}
+            ${{ github.repository_owner }}/demo:14.0
+          build-args: |
+            ODOO_DB=odoopbx_14
+            ODOO_VERSION=14.0
   demo13:
     runs-on: ubuntu-20.04
-    env:
-      ODOO_DB: odoopbx_13
-      ODOO_VERSION: "13.0"
     steps:
-      - run: echo ${{ ODOO_DB }} "$ODOO_VERSION" '$ODOO_VERSION'
       - uses: actions/checkout@master
       - uses: docker/login-action@v1
         with:
@@ -47,4 +60,43 @@ jobs:
           file: ./docker/demo/Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/demo:${{ env.ODOO_VERSION }}
+            ${{ github.repository_owner }}/demo:13.0
+          build-args: |
+            ODOO_DB=odoopbx_13
+            ODOO_VERSION=13.0
+  demo12:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./docker/demo/Dockerfile
+          push: true
+          tags: |
+            ${{ github.repository_owner }}/demo:12.0
+          build-args: |
+            ODOO_DB=odoopbx_12
+            ODOO_VERSION=12.0
+  demo11:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./docker/demo/Dockerfile
+          push: true
+          tags: |
+            ${{ github.repository_owner }}/demo:11.0
+          build-args: |
+            ODOO_DB=odoopbx_11
+            ODOO_VERSION=11.0
