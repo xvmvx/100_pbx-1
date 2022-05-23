@@ -16,6 +16,7 @@ jobs:
       ODOO_DB: odoopbx_14
       ODOO_VERSION: "14.0"
     steps:
+      - run: echo ${{ ODOO_DB }} "$ODOO_VERSION" '$ODOO_VERSION'
       - uses: actions/checkout@master
       - uses: docker/login-action@v1
         with:
@@ -34,6 +35,7 @@ jobs:
       ODOO_DB: odoopbx_13
       ODOO_VERSION: "13.0"
     steps:
+      - run: echo ${{ ODOO_DB }} "$ODOO_VERSION" '$ODOO_VERSION'
       - uses: actions/checkout@master
       - uses: docker/login-action@v1
         with:
