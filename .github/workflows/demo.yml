@@ -12,11 +12,12 @@ on:
 jobs:
   demo14:
     runs-on: ubuntu-20.04
-    environment:
+    env:
       ODOO_DB: odoopbx_14
       ODOO_VERSION: 14.0
     steps:
       - run: echo $ODOO_DB $ODOO_VERSION
+      - run: echo ${{ env.ODOO_DB }} "${{ env.ODOO_VERSION }}" '${{ env.ODOO_VERSION }}'
       - uses: actions/checkout@master
       - uses: docker/login-action@v1
         with:
