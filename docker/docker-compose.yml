@@ -3,13 +3,13 @@ services:
 
   demo:
     hostname: demo
-    image: odoopbx/demo:${ODOO_VERSION}
+    image: odoopbx/demo:${ODOO_VERSION:-15.0}
     environment:
-      - ODOO_VERSION=${ODOO_VERSION}
+      - ODOO_VERSION=${ODOO_VERSION:-15.0}
       - ODOO_DB=odoopbx_15
     volumes:
       - db_data:/var/lib/postgresql
-      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
+      - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
       - asterisk_etc:/etc/asterisk
       - pki:/etc/pki
     extra_hosts:
@@ -43,7 +43,7 @@ services:
     - DATABASE=${ODOO_DB:-odoopbx_15}
     - ODOO_VERSION
     volumes:
-      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
+      - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
     ports:
       - 0.0.0.0:8072:8072
 
