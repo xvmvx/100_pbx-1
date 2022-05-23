@@ -54,33 +54,22 @@ services:
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
-      - ./salt.conf:/etc/supervisor/conf.d/salt.conf
-      - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
-      - asterisk_run:/var/run/asterisk
+    environment:
+      - ODOO_DB
+      - ASTERISK_AUTOSTART=false
+    extra_hosts:
+      #- asterisk:127.0.0.1
+      - asterisk:host-gateway
     ports:
       # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
-    environment:
-      - ODOO_DB
-
-
-  asterisk:
-    hostname: asterisk
-    image: odoopbx/pbx
-    privileged: true
-    volumes:
-      - ./asterisk.conf:/etc/supervisor/conf.d/asterisk.conf
-      - asterisk_spool:/var/spool/asterisk
-      - asterisk_etc:/etc/asterisk
-      - asterisk_run:/var/run/asterisk
-    ports:
       # SIP UDP transport (pjsip.conf)
-      - 0.0.0.0:65060:65060/udp
+      #- 0.0.0.0:65060:65060/udp
       # RTP media ports (rtp.conf)
-      - 0.0.0.0:10100-10200:10100-10200/udp
+      #- 0.0.0.0:10100-10200:10100-10200/udp
       # HTTP TLS for WebRTC (http.conf)
-      - 0.0.0.0:8089:8089
+      #- 0.0.0.0:8089:8089
 
   freepbx:
     hostname: freepbx
@@ -107,7 +96,5 @@ volumes:
   db_data:
   pki:
   asterisk_etc:
-  asterisk_run:
-  asterisk_spool:
   freepbx_db:
   freepbx_data:

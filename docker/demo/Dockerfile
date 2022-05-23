@@ -18,7 +18,6 @@ RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
     && salt-call --local state.apply odoopbx pillar="{'odoo': {'version': \"$ODOO_VERSION\"},}" \
     && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
-COPY ./docker/supervisord.conf /etc/supervisor/
-COPY ./docker/demo/supervisor.conf /etc/supervisor/conf.d/demo.conf
+COPY ./docker/demo/supervisor.conf /etc/supervisor/
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
