@@ -13,10 +13,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y insta
 # Install Asteirsk and Agent
 COPY ./ /opt/agent/
 RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
-    && salt-call --local state.apply odoopbx pillar="{'odoo': {'version': \"$ODOO_VERSION\"},}"
-
-RUN mv /usr/src/asterisk/configs /usr/local/asterisk-configs \
-    && rm -rf /usr/src/asterisk
+    && salt-call --local state.apply agent \
+    && salt-call --local state.apply asterisk \
+    && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
 COPY ./docker/supervisord.conf /etc/supervisor/
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

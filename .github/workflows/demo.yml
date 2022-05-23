@@ -1,0 +1,49 @@
+name: DEMO
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - salt/**
+      - docker/**
+      - .github/workflows/demo.yml
+
+
+jobs:
+  demo15:
+    runs-on: ubuntu-20.04
+    environment:
+      ODOO_DB: odoopbx_15
+      ODOO_VERSION: 15.0
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./docker/demo/Dockerfile
+          push: true
+          tags: |
+            ${{ github.repository_owner }}/demo:15.0
+
+  demo14:
+    runs-on: ubuntu-20.04
+    environment:
+      ODOO_DB: odoopbx_14
+      ODOO_VERSION: 14.0
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./docker/demo/Dockerfile
+          push: true
+          tags: |
+            ${{ github.repository_owner }}/demo:14.0

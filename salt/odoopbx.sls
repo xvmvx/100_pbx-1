@@ -12,6 +12,7 @@ not-yet-supported:
     - text: Sorry, {{ grains.os_family }} is not supported yet
 {% endif %}
 
+{%- if "virtual_subtype" not in grains %}
 odoopbx-configure:
   host.present:
     - ip: 127.0.0.1
@@ -19,6 +20,7 @@ odoopbx-configure:
         - agent
         - odoo
         - asterisk
+{%- endif %}
 
 {%- if grains.get('init') in ['systemd',] %}
 odoopbx-run-services:

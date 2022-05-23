@@ -12,9 +12,6 @@ services:
       - odoo_data_${ODOO_VERSION}:/var/lib/odoo
       - asterisk_etc:/etc/asterisk
       - pki:/etc/pki
-      - ./demo/supervisor.conf:/etc/supervisor/conf.d/demo.conf
-      - ./salt.conf:/etc/supervisor/conf.d/salt.conf
-      - ./asterisk.conf:/etc/supervisor/conf.d/asterisk.conf
     extra_hosts:
       - odoo:127.0.0.1
       - asterisk:127.0.0.1
