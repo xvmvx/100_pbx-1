@@ -2,6 +2,8 @@ FROM ubuntu:20.04
 ENV ODOO_VERSION 15.0
 ENV ODOO_DB odoopbx_15
 
+RUN echo $ODOO_VERSION $ODOO_DB
+
 # Install prerequisites
 # jinja==3.0.3 until next release salt-3004.2
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install \
@@ -15,8 +17,7 @@ COPY ./ /opt/agent/
 RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
     && salt-call --local state.apply odoopbx pillar="{'odoo': {'version': \"$ODOO_VERSION\"},}"
 
-RUN mv /usr/src/asterisk/configs /usr/local/asterisk-configs \
-    && rm -rf /usr/src/asterisk
+RUN mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
 COPY ./docker/supervisord.conf /etc/supervisor/
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

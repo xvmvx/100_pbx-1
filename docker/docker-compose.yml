@@ -1,6 +1,27 @@
 version: '3.1'
 services:
 
+  demo:
+    hostname: demo
+    image: odoopbx/demo:${ODOO_VERSION}
+    environment:
+      - ODOO_VERSION=${ODOO_VERSION}
+      - ODOO_DB=odoopbx_15
+    volumes:
+      - db_data:/var/lib/postgresql
+      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
+      - asterisk_etc:/etc/asterisk
+      - pki:/etc/pki
+      - ./demo/supervisor.conf:/etc/supervisor/conf.d/demo.conf
+      - ./salt.conf:/etc/supervisor/conf.d/salt.conf
+      - ./asterisk.conf:/etc/supervisor/conf.d/asterisk.conf
+    extra_hosts:
+      - odoo:127.0.0.1
+      - asterisk:127.0.0.1
+      - agent:127.0.0.1
+    ports:
+      - 0.0.0.0:8015:8072
+
   db:
     hostname: db
     image: postgres:12
@@ -25,7 +46,7 @@ services:
     - DATABASE=${ODOO_DB:-odoopbx_15}
     - ODOO_VERSION
     volumes:
-      - odoo_data:/var/lib/odoo
+      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
     ports:
       - 0.0.0.0:8072:8072
 
@@ -80,8 +101,14 @@ services:
 
 
 volumes:
+  odoo_data_15.0:
+  odoo_data_14.0:
+  odoo_data_13.0:
+  odoo_data_12.0:
+  odoo_data_11.0:
   odoo_data:
   db_data:
+  pki:
   asterisk_etc:
   asterisk_run:
   asterisk_spool:

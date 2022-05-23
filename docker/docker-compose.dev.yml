@@ -13,3 +13,12 @@ services:
     build:
       dockerfile: ./docker/Dockerfile
       context: ../
+
+  demo:
+    image: odoopbx/demo:${ODOO_VERSION:-15.0}
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: ../
+    environment:
+      - ODOO_VERSION=${ODOO_VERSION:-15.0}
+      - ODOO_DB=odoopbx_15

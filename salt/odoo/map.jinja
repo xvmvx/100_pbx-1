@@ -2,6 +2,10 @@
 
 {% set odoo = salt['grains.filter_by'](
   defaults,
-  merge=salt['config.get']('odoo', merge='recurse'),
-  base='odoo')
+  merge=salt['grains.filter_by'](
+    { 'default': {'admin_passwd': 999999999999999 | random_hash }},
+    merge=salt['config.get']('odoo', merge='recurse'),
+    ),
+  base='odoo'
+  )
 %}

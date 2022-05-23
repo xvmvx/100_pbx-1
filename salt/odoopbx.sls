@@ -13,16 +13,12 @@ not-yet-supported:
 {% endif %}
 
 odoopbx-configure:
-  file.managed:
-    - name: /etc/salt/minion_local.conf
-    - contents: |
-        ami_host: 127.0.0.1
-        odoo_host: 127.0.0.1
-  {%- if "virtual_subtype" not in grains %}
   host.present:
-    - name: agent
     - ip: 127.0.0.1
-  {%- endif %}
+    - names:
+        - agent
+        - odoo
+        - asterisk
 
 {%- if grains.get('init') in ['systemd',] %}
 odoopbx-run-services:
