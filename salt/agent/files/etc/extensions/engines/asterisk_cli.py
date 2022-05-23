@@ -66,14 +66,10 @@ class MyTermSocket(TermSocket):
 
 
 def start():
-    if not __salt__['config.get']('asterisk_cli_enabled'):
-        log.info('Asterisk CLI service not enabled.')
-        time.sleep(3600*24*365*100) # Sleep 100 years otherwise Salt process manager will restart me.
-        return
-    ssl_crt = __salt__['config.get']('agent_ssl_crt')
-    ssl_key = __salt__['config.get']('agent_ssl_key')
+    ssl_crt = __salt__['config.get']('asterisk_cli_ssl_crt')
+    ssl_key = __salt__['config.get']('asterisk_cli_ssl_key')
     ssl_options = None
-    agent_listen_address = __salt__['config.get']('agent_listen_address')
+    asterisk_cli_listen_address = __salt__['config.get']('asterisk_cli_listen_address')
     asterisk_cli_port = __salt__['config.get']('asterisk_cli_port')
     odoo_url = '{}://{}:{}'.format(
         'https' if __salt__['config.get']('odoo_use_ssl') else 'http',
@@ -105,13 +101,13 @@ def start():
         # ssl_options.options |= ssl.PROTOCOL_TLS
         ssl_options.load_cert_chain(ssl_crt, ssl_key)
         log.info('Starting CLI server at HTTPS://%s:%s.',
-                 agent_listen_address, asterisk_cli_port)
+                 asterisk_cli_listen_address, asterisk_cli_port)
     else:
         log.warning('Starting CLI server (not secure) at HTTP://%s:%s.',
-                 agent_listen_address, asterisk_cli_port)        
+                 asterisk_cli_listen_address, asterisk_cli_port)        
     http_server = salt.ext.tornado.httpserver.HTTPServer(
         app, ssl_options=ssl_options)
-    http_server.listen(asterisk_cli_port, address=agent_listen_address)
+    http_server.listen(asterisk_cli_port, address=asterisk_cli_listen_address)
     try:
         if not io_loop._running:
             io_loop.start()

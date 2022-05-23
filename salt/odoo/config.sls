@@ -7,14 +7,11 @@ odoo-dbuser:
     - encrypted: True
     - db_user: postgres
 
-odoo-setenv:
-  environ.setenv:
-    - name: ODOO_RC
-    - value: {{ odoo.conf_path }}
-
 odoo-init-base:
   cmd.run:
-    - name: {{ odoo.src_path }}/odoo-bin --no-http --stop-after-init  -i base
+    - name: >
+        {{ odoo.src_path }}/odoo-bin -c {{ odoo.conf_path }} -d {{ salt['environ.get']('ODOO_DB') }}
+        --no-http --stop-after-init  -i base
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - unless: >
@@ -26,7 +23,8 @@ odoo-init-base:
 odoo-init-asterisk_plus:
   cmd.run:
     - name: >
-        {{ odoo.src_path }}/odoo-bin --no-http --stop-after-init  -i asterisk_plus
+        {{ odoo.src_path }}/odoo-bin -c {{ odoo.conf_path }} -d {{ salt['environ.get']('ODOO_DB') }}
+        --no-http --stop-after-init  -i asterisk_plus
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - require:

@@ -1,7 +1,26 @@
 version: '3.1'
 services:
 
+  demo:
+    hostname: demo
+    image: odoopbx/demo:${ODOO_VERSION}
+    environment:
+      - ODOO_VERSION=${ODOO_VERSION}
+      - ODOO_DB=odoopbx_15
+    volumes:
+      - db_data:/var/lib/postgresql
+      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
+      - asterisk_etc:/etc/asterisk
+      - pki:/etc/pki
+    extra_hosts:
+      - odoo:127.0.0.1
+      - asterisk:127.0.0.1
+      - agent:127.0.0.1
+    ports:
+      - 0.0.0.0:8015:8072
+
   db:
+    hostname: db
     image: postgres:12
     environment:
       - POSTGRES_PASSWORD=odoo
@@ -12,41 +31,48 @@ services:
       - db_data:/var/lib/postgresql/data/pgdata
 
   odoo:
+    hostname: odoo
     depends_on:
       - db
-    image: odoopbx/odoo:${ODOO_VERSION:-14}
-    command: odoo -d ${ODOO_DB:-odoopbx_14}
+    image: odoopbx/odoo:${ODOO_VERSION:-15.0}
+    command: odoo -d ${ODOO_DB:-odoopbx_15}
     environment:
     - HOST=db
     - USER=odoo
     - PASSWORD=odoo
-    - DATABASE=${ODOO_DB:-odoopbx_14}
+    - DATABASE=${ODOO_DB:-odoopbx_15}
+    - ODOO_VERSION
     volumes:
-      - odoo_data:/var/lib/odoo
+      - odoo_data_${ODOO_VERSION}:/var/lib/odoo
+    ports:
+      - 0.0.0.0:8072:8072
 
   agent:
-    image: odoopbx/agent:1.0
+    hostname: agent
+    image: odoopbx/pbx
     ipc: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
-      - asterisk_spool:/var/spool/asterisk
       - asterisk_etc:/etc/asterisk
-      - asterisk_run:/var/run/asterisk
     environment:
-      - ODOO_DB=${ODOO_DB:-odoopbx_14}
+      - ODOO_DB
+      - ASTERISK_AUTOSTART=false
+    extra_hosts:
+      #- asterisk:127.0.0.1
+      - asterisk:host-gateway
     ports:
+      # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
-
-  asterisk:
-    image: odoopbx/asterisk:16.8-cert12
-    privileged: true
-    volumes:
-      - asterisk_spool:/var/spool/asterisk
-      - asterisk_etc:/etc/asterisk
-      - asterisk_run:/var/run/asterisk
+      # SIP UDP transport (pjsip.conf)
+      #- 0.0.0.0:65060:65060/udp
+      # RTP media ports (rtp.conf)
+      #- 0.0.0.0:10100-10200:10100-10200/udp
+      # HTTP TLS for WebRTC (http.conf)
+      #- 0.0.0.0:8089:8089
 
   freepbx:
+    hostname: freepbx
     # https://hub.docker.com/r/tiredofit/freepbx. See also:
     # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
     image: tiredofit/freepbx
@@ -61,10 +87,14 @@ services:
 
 
 volumes:
+  odoo_data_15.0:
+  odoo_data_14.0:
+  odoo_data_13.0:
+  odoo_data_12.0:
+  odoo_data_11.0:
   odoo_data:
   db_data:
+  pki:
   asterisk_etc:
-  asterisk_run:
-  asterisk_spool:
   freepbx_db:
   freepbx_data:

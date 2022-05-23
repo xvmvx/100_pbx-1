@@ -111,9 +111,5 @@ class OdooExecutor:
 
 
 def start():
-    if __salt__['config.get']('odoo_executor_enabled'):
-        log.info('Starting Odoo Executor engine.')
-        run(OdooExecutor().start())
-    else:
-        log.info('OdooRPC not enabled.')
-        time.sleep(3600*24*365*100) # Sleep 100 years otherwise Salt process manager will restart me.
+    log.info('Starting Odoo Executor engine.')
+    run(OdooExecutor().start())

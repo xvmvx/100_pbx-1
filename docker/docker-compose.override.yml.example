@@ -2,30 +2,25 @@ version: '3.1'
 services:
 
   odoo:
-    ports:
-      - 0.0.0.0:8072:8072
     volumes:
-      - ./odoo/odoo.conf:/etc/odoo/odoo.conf
       - ../../addons/:/mnt/addons
       #- /srv/dev/addons_ee:/mnt/addons_ee
       #- /srv/dev/enterprise:/mnt/enterprise
     #command: sleep 100d
 
   agent:
-    # When Odoo is out of the docker uncomment Salt API port to connect to.
+    volumes:
+      - ../:/opt/agent
+    # Salt API port. Uncomment to make it available for Odoo outside of docker network
     # ports:
     #  - 0.0.0.0:48008:48008
-    volumes:
-      - ../:/opt/agent
+    # If Odoo is running on the host OS of this docker container
+    #extra_hosts:
+    #  - odoo:host-gateway
 
   asterisk:
-    ports:
-      - 0.0.0.0:65060:65060/udp
-      - 0.0.0.0:10100-10200:10100-10200/udp
-      - 0.0.0.0:8089:8089
     volumes:
       - ../:/opt/agent
-      - asterisk_etc:/etc/asterisk    # volume from docker-compose.yml
       #- /etc/asterisk:/etc/asterisk  # host directory /etc/asterisk
     #command: sleep 100d
 
