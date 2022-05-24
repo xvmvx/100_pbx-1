@@ -4,11 +4,11 @@ Documentation=https://docs.saltstack.com/en/latest/contents.html
 After=network.target salt-master.service
 
 [Service]
-KillMode=process
 Type=notify
 NotifyAccess=all
 LimitNOFILE=8192
 ExecStart={{ salt['cmd.run_stdout']('which salt-minion') }}
+TimeoutStopSec=3
 StandardOutput=null
 
 [Install]

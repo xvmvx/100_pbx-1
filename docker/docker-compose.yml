@@ -11,6 +11,8 @@ services:
     ports:
       # Odoo HTTP interface http://localhost:8015/web
       - 0.0.0.0:80:80
+      # Odoo HTTPS interface http://localhost:8015/web
+      - 0.0.0.0:443:443
       # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
       # SIP UDP transport (pjsip.conf)
