@@ -4,18 +4,13 @@ services:
   demo:
     hostname: demo
     image: odoopbx/demo:${ODOO_VERSION:-15.0}
-    volumes:
-      - db_data:/var/lib/postgresql
-      - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
-      - asterisk_etc:/etc/asterisk
-      - pki:/etc/pki
     extra_hosts:
       - odoo:127.0.0.1
       - asterisk:127.0.0.1
       - agent:127.0.0.1
     ports:
       # Odoo HTTP interface http://localhost:8015/web
-      - 0.0.0.0:8015:8072
+      - 0.0.0.0:80:80
       # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
       # SIP UDP transport (pjsip.conf)
@@ -50,7 +45,7 @@ services:
     - DATABASE=${ODOO_DB:-odoopbx_15}
     - ODOO_VERSION
     volumes:
-      - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
+      - odoo_data:/var/lib/odoo
     ports:
       # Odoo HTTP interface http://localhost:8072/web
       - 0.0.0.0:8072:8072
@@ -88,14 +83,8 @@ services:
 
 
 volumes:
-  odoo_data_15.0:
-  odoo_data_14.0:
-  odoo_data_13.0:
-  odoo_data_12.0:
-  odoo_data_11.0:
   odoo_data:
   db_data:
-  pki:
   asterisk_etc:
   freepbx_db:
   freepbx_data:
