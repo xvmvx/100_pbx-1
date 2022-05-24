@@ -6,9 +6,10 @@
     { 'default':
       { 'admin_passwd': 999999999999999 | random_hash,
         'version': salt['environ.get']('ODOO_VERSION', default='15.0'),
+        'db': salt['environ.get']('ODOO_DB', default='odoopbx_15'),
       }
     },
-    merge=salt['config.get']('odoo', merge='recurse'),
+    merge=salt['pillar.get']('odoo', {}),
     ),
   base='odoo'
   )
