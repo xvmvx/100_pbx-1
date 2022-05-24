@@ -3,9 +3,6 @@ asterisk:
   lookup:
     rev: certified/16.8-cert12
 
-odoo:
- dbname: odoopbx
-
 letsencrypt:
   install_method: pip
   cli_install_dir: /srv/certbot

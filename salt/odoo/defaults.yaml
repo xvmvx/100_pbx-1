@@ -1,6 +1,4 @@
 odoo:
-  version: '15.0'
-  dbname: demo
   user: odoo
   src_path: /srv/odoo
   data_path: /var/lib/odoo

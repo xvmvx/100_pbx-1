@@ -4,9 +4,6 @@ services:
   demo:
     hostname: demo
     image: odoopbx/demo:${ODOO_VERSION:-15.0}
-    environment:
-      - ODOO_VERSION=${ODOO_VERSION:-15.0}
-      - ODOO_DB=odoopbx_15
     volumes:
       - db_data:/var/lib/postgresql
       - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
@@ -17,7 +14,17 @@ services:
       - asterisk:127.0.0.1
       - agent:127.0.0.1
     ports:
+      # Odoo HTTP interface http://localhost:8015/web
       - 0.0.0.0:8015:8072
+      # Salt-engine listener for asterisk CLI
+      - 0.0.0.0:30000:30000
+      # SIP UDP transport (pjsip.conf)
+      - 0.0.0.0:65060:65060/udp
+      # RTP media ports (rtp.conf)
+      - 0.0.0.0:10100-10200:10100-10200/udp
+      # HTTP TLS for WebRTC (http.conf)
+      - 0.0.0.0:8089:8089
+
 
   db:
     hostname: db
@@ -45,6 +52,7 @@ services:
     volumes:
       - odoo_data_${ODOO_VERSION:-15.0}:/var/lib/odoo
     ports:
+      # Odoo HTTP interface http://localhost:8072/web
       - 0.0.0.0:8072:8072
 
   agent:
@@ -59,17 +67,10 @@ services:
       - ODOO_DB
       - ASTERISK_AUTOSTART=false
     extra_hosts:
-      #- asterisk:127.0.0.1
       - asterisk:host-gateway
     ports:
       # Salt-engine listener for asterisk CLI
       - 0.0.0.0:30000:30000
-      # SIP UDP transport (pjsip.conf)
-      #- 0.0.0.0:65060:65060/udp
-      # RTP media ports (rtp.conf)
-      #- 0.0.0.0:10100-10200:10100-10200/udp
-      # HTTP TLS for WebRTC (http.conf)
-      #- 0.0.0.0:8089:8089
 
   freepbx:
     hostname: freepbx

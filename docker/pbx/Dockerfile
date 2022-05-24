@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
-ENV ODOO_VERSION 15.0
-ENV ODOO_DB odoopbx_15
+
+ENV SALT_AUTOSTART=true ASTERISK_AUTOSTART=true
 
 # Install prerequisites
 # jinja==3.0.3 until next release salt-3004.2
@@ -17,5 +17,5 @@ RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
     && salt-call --local state.apply asterisk \
     && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
-COPY ./docker/pbx/supervisor.conf /etc/supervisor/
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+COPY ./docker/pbx/supervisord.conf /etc/supervisord.conf
+CMD ["/usr/bin/supervisord"]
