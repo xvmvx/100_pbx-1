@@ -1,6 +1,13 @@
 version: '3.1'
 services:
 
+  demo:
+    # Must be a real FQDN hostname to obtain SSL cert from letsencrypt
+    hostname: myname.example.com
+    ports:
+      # Nginx HTTP port. Must be open to obtain SSL cert from letsencrypt.
+      - 0.0.0.0:80:80
+
   odoo:
     volumes:
       - ../../addons/:/mnt/addons
@@ -8,15 +15,11 @@ services:
       #- /srv/dev/enterprise:/mnt/enterprise
     #command: sleep 100d
 
-  agent:
+  pbx:
     volumes:
       - ../:/opt/agent
     environment:
       - ASTERISK_AUTOSTART=true
-    extra_hosts:
-      - asterisk:127.0.0.1
-      # When Odoo is running on the host-OS of this docker container
-      #- odoo:host-gateway
      ports:
       # Asterisk SIP UDP transport (pjsip.conf)
       - 0.0.0.0:65060:65060/udp
