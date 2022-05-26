@@ -24,11 +24,8 @@ odoo-init-asterisk_plus:
   cmd.run:
     - name: >
         {{ odoo.src_path }}/odoo-bin -c {{ odoo.conf_path }} -d {{ odoo.db }}
-        --no-http --stop-after-init  -i asterisk_plus
+        --no-http --stop-after-init  -i {{ odoo.addons_init }}
     - runas: {{ odoo.user }}
     - shell: /bin/bash
-    - unless: >
-        echo "env['asterisk_plus.server']" |
-        {{ odoo.src_path }}/odoo-bin shell --no-http -d {{ odoo.db }}
     - require:
       - odoo-init-base
