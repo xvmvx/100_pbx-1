@@ -1,5 +1,3 @@
-# ©️ OdooPBX by Odooist, Odoo Proprietary License v1.0, 2020
-
 import click
 from datetime import datetime, timedelta
 import json
@@ -184,11 +182,8 @@ def show():
 
 @show.command(help='Show system version.', name='version')
 def show_version():
-    minion_id = subprocess.check_output('salt-call --local --out=txt config.get id',
-        shell=True, universal_newlines=True)
-    import odoopbx
-    click.echo('Odoo PBX ID: {}CLI version: {}'.format(
-        minion_id.split(':')[1], odoopbx.__version__))
+    import odoopbx.cli
+    click.echo('Odoo CLI version: {}'.format(odoopbx.cli.__version__))
 
 
 @show.command(help='Show system status.', name='report')
