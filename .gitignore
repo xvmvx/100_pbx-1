@@ -9,3 +9,10 @@ docker-compose.override.yml
 docker/asterisk/etc-custom
 master_custom.conf
 pillar/local.sls
+build/
+dist/
+docker/minion_local.conf
+docker/odoo.conf
+docker/odoo/
+odoopbx.egg-info/
+twine.sh

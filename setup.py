@@ -3,7 +3,7 @@
 Odoo PBX management application.
 '''
 import re
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.command.install import install
 import os
 from os.path import abspath, dirname, join
@@ -12,7 +12,7 @@ def get_version():
     try:
         version_file = open(
             os.path.join(
-                os.path.dirname(__file__), 'odoopbx', 'version.py')
+                os.path.dirname(__file__), 'cli', 'version.py')
         ).read()
         res = re.search("^__version__ = '(.+)'$", version_file, re.MULTILINE).groups(0)[0]
         return res
@@ -38,15 +38,21 @@ setup(
     long_description=read_file('README.rst'),
     long_description_content_type='text/x-rst',
     url='https://gitlab.com/odoopbx',
-    packages=find_packages(include=['odoopbx', 'odoopbx.*']),
+    package_dir={'odoopbx': ''},
     include_package_data=True,
-    install_requires=[        
+    packages=[
+        'odoopbx',
+    ],
+    package_data={
+        'odoopbx': ['salt', 'pillar'],
+    },
+    install_requires=[
         'salt',
         'click',
     ],
     entry_points='''
 [console_scripts]
-odoopbx=odoopbx.odoopbx_cli:main
+odoopbx=odoopbx.cli.odoopbx_cli:main
     ''',
     zip_safe=False,
     classifiers=[

@@ -59,22 +59,23 @@ def install(service, master):
 
         \b
         odoopbx install agent
-        odoopbx install all
-        odoopbx install https.letsencrypt
-
+        odoopbx install asterisk
+        odoopbx install odoo
+        odoopbx install letsencrypt
     """
     options = ''
     if master:
         options += f'--master={master}'
-
-    if service == 'all':
-        service = 'odoopbx'
-
+    else:
+        file_root = os.path.join(
+            os.path.split(os.path.dirname(__file__))[-2], 'salt')
+        pillar_root = os.path.join(
+            os.path.split(os.path.dirname(__file__))[-2], 'pillar')
+        options += '--local --file-root={} --pillar-root={}'.format(
+            file_root, pillar_root)
     try:
         subprocess.check_call('script -ec '
-            '"salt-call --local -V; '
-            'salt-call --local grains.items; '
-            f'salt-call -c /etc/salt/install {options} state.apply {service}" '
+            f'"salt-call {options} state.apply {service}" '
             f'{TYPESCRIPT_PATH}',
             shell=True)
     except subprocess.CalledProcessError as e:

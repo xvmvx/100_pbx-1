@@ -1,1 +1,3 @@
-include README.rst logo.png
+include README.rst 
+recursive-include salt *
+recursive-include pillar *
