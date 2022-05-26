@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-ENV SALT_AUTOSTART=true SALT_AUTOSTART_DELAY=1 ASTERISK_AUTOSTART=true
+ENV SALT_AUTOSTART=true ASTERISK_AUTOSTART=true
 
 # Install prerequisites
 # jinja==3.0.3 until next release salt-3004.2

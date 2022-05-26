@@ -9,19 +9,18 @@ services:
       - asterisk:127.0.0.1
       - agent:127.0.0.1
     ports:
-      # Odoo HTTP interface http://localhost:8015/web
-      - 0.0.0.0:80:80
-      # Odoo HTTPS interface http://localhost:8015/web
+      # Odoo HTTP interface http://localhost:8080/web
+      - 0.0.0.0:8080:8072
+      # Nginx HTTPS proxy for Odoo https://localhost/web
       - 0.0.0.0:443:443
-      # Salt-engine listener for asterisk CLI
+      # Salt listener for asterisk CLI
       - 0.0.0.0:30000:30000
-      # SIP UDP transport (pjsip.conf)
+      # Asterisk SIP UDP transport (pjsip.conf)
       - 0.0.0.0:65060:65060/udp
-      # RTP media ports (rtp.conf)
+      # Asterisk RTP media ports (rtp.conf)
       - 0.0.0.0:10100-10200:10100-10200/udp
-      # HTTP TLS for WebRTC (http.conf)
+      # Asterisk WSS port for WebRTC (http.conf)
       - 0.0.0.0:8089:8089
-
 
   db:
     hostname: db
@@ -52,10 +51,10 @@ services:
       # Odoo HTTP interface http://localhost:8072/web
       - 0.0.0.0:8072:8072
 
-  agent:
-    hostname: agent
+  pbx:
+    hostname: pbx
     image: odoopbx/pbx
-    ipc: host
+    network_mode: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
@@ -63,11 +62,6 @@ services:
     environment:
       - ODOO_DB
       - ASTERISK_AUTOSTART=false
-    extra_hosts:
-      - asterisk:host-gateway
-    ports:
-      # Salt-engine listener for asterisk CLI
-      - 0.0.0.0:30000:30000
 
   freepbx:
     hostname: freepbx
