@@ -13,6 +13,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y insta
 # Install Asteirsk and Agent
 COPY ./ /opt/agent/
 RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
+    && pip3 install /opt/agent/ \
     && salt-call --local state.apply agent \
     && salt-call --local state.apply asterisk \
     && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
