@@ -6,8 +6,7 @@ on:
     paths:
       - salt/asterisk/**
       - salt/agent/**
-      - docker/asterisk/**
-      - docker/agent/**
+      - docker/pbx/**
       - .github/workflows/pbx.yml
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./docker/Dockerfile
+          file: ./docker/pbx/Dockerfile
           push: true
           tags: |
             ${{ github.repository_owner }}/pbx:1.0

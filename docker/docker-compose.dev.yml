@@ -11,5 +11,14 @@ services:
   pbx:
     image: odoopbx/pbx:latest
     build:
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/pbx/Dockerfile
       context: ../
+
+  demo:
+    image: odoopbx/demo:${ODOO_VERSION:-15.0}
+    build:
+      dockerfile: ./docker/demo/Dockerfile
+      context: ../
+    environment:
+      - ODOO_VERSION=${ODOO_VERSION:-15.0}
+      - ODOO_DB=odoopbx_15

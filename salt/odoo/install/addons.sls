@@ -1,6 +1,6 @@
 {%- from "odoo/map.jinja" import odoo with context -%}
 
-addons-cloned:
+addons-cloned-{{ odoo.version }}:
   git.latest:
     - name: https://github.com/odoopbx/addons.git
     - branch: {{ odoo.version }}
@@ -21,6 +21,6 @@ addons-pip-reqs:
     - upgrade: {{ odoo.force_update }}
     - requirements: {{ odoo.addons_path }}/requirements.txt
     - require:
-      - addons-cloned
+      - addons-cloned-{{ odoo.version }}
     - retry:
         attempts: 2

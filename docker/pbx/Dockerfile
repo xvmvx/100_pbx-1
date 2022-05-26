@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+ENV SALT_AUTOSTART=true SALT_AUTOSTART_DELAY=1 ASTERISK_AUTOSTART=true
+
 # Install prerequisites
 # jinja==3.0.3 until next release salt-3004.2
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install \
@@ -12,12 +14,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y insta
 COPY ./ /opt/agent/
 RUN mkdir /etc/salt && ln -vs /opt/agent/salt /opt/agent/pillar /srv \
     && salt-call --local state.apply agent \
-    && salt-call --local state.apply asterisk
+    && salt-call --local state.apply asterisk \
+    && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
-VOLUME ["/var/spool/asterisk"]
-
-RUN mv /usr/src/asterisk/configs /usr/local/asterisk-configs \
-    && rm -rf /usr/src/asterisk
-
-COPY ./docker/supervisord.conf /etc/supervisor/
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+COPY ./docker/pbx/supervisord.conf /etc/supervisor/supervisord.conf
+CMD ["/usr/bin/supervisord"]

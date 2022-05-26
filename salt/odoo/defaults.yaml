@@ -1,8 +1,5 @@
 odoo:
-  version: '14.0'
-  dbname: demo
   user: odoo
-  admin_passwd: odoopbx
   src_path: /srv/odoo
   data_path: /var/lib/odoo
   addons_path: /mnt/addons

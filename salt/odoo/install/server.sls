@@ -37,7 +37,7 @@ odoo-make-dirs:
         - group: {{ odoo.user }}
     - makedirs: True
 
-odoo-cloned:
+odoo-cloned-{{ odoo.version }}:
   git.latest:
     - name: https://github.com/odoo/odoo.git
     - branch: {{ odoo.version }}
@@ -60,7 +60,7 @@ odoo-pip-reqs:
     - upgrade: {{ odoo.force_update }}
     - requirements: {{ odoo.src_path }}/requirements.txt
     - require:
-      - odoo-cloned
+      - odoo-cloned-{{ odoo.version }}
     - retry:
         attempts: 2
 

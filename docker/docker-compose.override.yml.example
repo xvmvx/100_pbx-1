@@ -11,18 +11,21 @@ services:
   agent:
     volumes:
       - ../:/opt/agent
-    # Salt API port. Uncomment to make it available for Odoo outside of docker network
-    # ports:
-    #  - 0.0.0.0:48008:48008
-    # If Odoo is running on the host OS of this docker container
-    #extra_hosts:
-    #  - odoo:host-gateway
-
-  asterisk:
-    volumes:
-      - ../:/opt/agent
-      #- /etc/asterisk:/etc/asterisk  # host directory /etc/asterisk
-    #command: sleep 100d
+    environment:
+      - ASTERISK_AUTOSTART=true
+    extra_hosts:
+      - asterisk:127.0.0.1
+      # When Odoo is running on the host-OS of this docker container
+      #- odoo:host-gateway
+     ports:
+      # Asterisk SIP UDP transport (pjsip.conf)
+      - 0.0.0.0:65060:65060/udp
+      # Asterisk RTP media ports (rtp.conf)
+      - 0.0.0.0:10100-10200:10100-10200/udp
+      # Asterisk HTTP TLS for WebRTC (http.conf)
+      - 0.0.0.0:8089:8089
+      # Salt API port. Makes it available for Odoo from outside of docker network
+      - 0.0.0.0:48008:48008
 
   freepbx:
     ports:
