@@ -40,9 +40,7 @@ setup(
     url='https://gitlab.com/odoopbx',
     package_dir={'odoopbx': ''},
     include_package_data=True,
-    packages=[
-        'odoopbx',
-    ],
+    packages=['odoopbx', 'odoopbx.cli'],
     package_data={
         'odoopbx': ['salt', 'pillar'],
     },
