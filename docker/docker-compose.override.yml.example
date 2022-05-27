@@ -10,25 +10,13 @@ services:
 
   odoo:
     volumes:
-      - ../../addons/:/mnt/addons
-      #- /srv/dev/addons_ee:/mnt/addons_ee
-      #- /srv/dev/enterprise:/mnt/enterprise
-    #command: sleep 100d
+      - /srv/dev/addons_ee:/mnt/addons_ee
+      - ./odoo.conf:/etc/odoo/odoo.conf
 
   pbx:
-    volumes:
-      - ../:/opt/agent
     environment:
+      - ./minion_local.conf:/etc/salt/minion_local.conf
       - ASTERISK_AUTOSTART=true
-     ports:
-      # Asterisk SIP UDP transport (pjsip.conf)
-      - 0.0.0.0:65060:65060/udp
-      # Asterisk RTP media ports (rtp.conf)
-      - 0.0.0.0:10100-10200:10100-10200/udp
-      # Asterisk HTTP TLS for WebRTC (http.conf)
-      - 0.0.0.0:8089:8089
-      # Salt API port. Makes it available for Odoo from outside of docker network
-      - 0.0.0.0:48008:48008
 
   freepbx:
     ports:
