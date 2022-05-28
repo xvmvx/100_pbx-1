@@ -28,10 +28,9 @@ services:
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
-      - PGDATA=/var/lib/postgresql/data/pgdata
     restart: unless-stopped
     volumes:
-      - db_data:/var/lib/postgresql/data/pgdata
+      - db_data:/var/lib/postgresql/data
 
   odoo:
     hostname: odoo
@@ -48,7 +47,7 @@ services:
     volumes:
       - odoo_data:/var/lib/odoo
     ports:
-      # Odoo HTTP interface http://localhost:8072/web
+      # Odoo HTTP longpolling port http://localhost:8072/web
       - 0.0.0.0:8072:8072
 
   pbx:

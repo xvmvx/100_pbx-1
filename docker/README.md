@@ -7,7 +7,7 @@ To switch between versions and database use variables ODOO_DB and ODOO_VERSION.
 Here is an example to launch Odoo 14.0 with odoopbx_14 database:
 
 ```
-ODOO_VERSION=14.0 ODOO_DB=odoopbx_14 docker-compose up -d odoo asterisk agent
+ODOO_VERSION=14.0 ODOO_DB=odoopbx_14 docker-compose up demo
 ```
 
 See [OdooPBX Installation documentation](https://odoopbx.github.io/docs/administration/installation.html) for more information.
