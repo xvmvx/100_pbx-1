@@ -143,10 +143,29 @@ def config_del(option):
 
 
 @main.command(help='Start a service.')
+@click.option('--after', type=str, help="Only used when run as supervisor eventlistener")
 @click.argument('service')
-def start(service):
-    os.execvp('systemctl', ['systemctl', 'start', service])
-
+def start(service, after):
+    servicectlmap = {'systemd': 'systemctl', 'supervisord': 'supervisorctl'}
+    try:
+        init = subprocess.check_output('salt-call --local --out=json grains.get init', shell=True)
+        init = json.loads(init)['local']
+        if after:
+            from supervisor.childutils import listener, get_headers
+            while True:
+                headers, payload = listener.wait()
+                #click.secho(f'========== {headers}\n========== {payload}\n', err=True)
+                if get_headers(payload)['processname'] == after:
+                    click.secho(f'+++++++ starting {service}', err=True)
+                    listener.ok()
+                    break
+                listener.ok()
+        res = subprocess.check_output(f'{servicectlmap[init]} start {service}', shell=True)
+    except subprocess.CalledProcessError as e:
+        click.secho(f'Error: {e}', err=True, fg='red')
+    except json.decoder.JSONDecodeError as e:
+        click.secho(f'Error: {e}', err=True, fg='red')
+    click.echo(res)
 
 @main.command(help='Stop a service.')
 @click.argument('service')
