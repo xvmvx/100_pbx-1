@@ -7,7 +7,7 @@ ENV MINION_AUTOSTART=true ASTERISK_AUTOSTART=true
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install \
         supervisor ssl-cert tzdata python3-pip \
         sudo tmux tmate screen vim curl \
-        iproute2 iputils-ping telnet net-tools tcpdump sngrep ngrep bind9-dnsutils
+        iproute2 iputils-ping telnet net-tools tcpdump sngrep ngrep bind9-dnsutils \
     && pip3 install jinja2==3.0.3 \
     && pip3 install salt
 
