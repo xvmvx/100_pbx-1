@@ -7,6 +7,9 @@ services:
     ports:
       # Nginx HTTP port. Must be open to obtain SSL cert from letsencrypt.
       - 0.0.0.0:80:80
+    # healthcheck example
+    healthcheck:
+      test: wget -q -O - http://localhost:8072/asterisk_plus/asterisk_ping?dbname=$$ODOO_DB | grep -q Success
 
   odoo:
     volumes:
