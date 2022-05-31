@@ -169,29 +169,17 @@ def start(service, after):
 
 @main.command(help='Stop a service.')
 @click.argument('service')
-@click.option('--kill', is_flag=True)
-def stop(service, kill):
-    subprocess.check_output('systemctl stop {}'.format(service), shell=True)
-    if kill:
-        def _get_pids():
-            pids = subprocess.check_output(
-                "ps -ef | grep {} | grep -v grep | awk '{{print $2}}'".format(service),
-                shell=True).decode()
-            if pids:
-                pids = [int(k) for k in pids.split('\n') if k]
-            else:
-                pids = []
-            return pids
-        pids = _get_pids()
-        if pids:            
-            for pid in pids:
-                try:
-                    os.kill(pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-            click.echo('Killed {} processes.'.format(len(pids)))    
-        else:
-            click.echo('No processes to kill.')
+def stop(service):
+    servicectlmap = {'systemd': 'systemctl', 'supervisord': 'supervisorctl'}
+    try:
+        init = subprocess.check_output('salt-call --local --out=json grains.get init', shell=True)
+        init = json.loads(init)['local']
+        res = subprocess.check_output(f'{servicectlmap[init]} stop {service}', shell=True)
+    except subprocess.CalledProcessError as e:
+        click.secho(f'Error: {e}', err=True, fg='red')
+    except json.decoder.JSONDecodeError as e:
+        click.secho(f'Error: {e}', err=True, fg='red')
+    click.echo(res)
 
 
 @main.group(help='Show information.')
