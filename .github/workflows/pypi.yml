@@ -1,0 +1,20 @@
+name: PYPI
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - cli/version.py
+
+jobs:
+  Release:
+    runs-on: ubuntu-20.04
+    env:
+      TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+      TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@master
+      - run: sudo pip3 install -U twine
+      - run: sudo python3 setup.py sdist
+      - run: twine upload dist/*
