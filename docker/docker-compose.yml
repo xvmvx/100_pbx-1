@@ -4,23 +4,14 @@ services:
   demo:
     hostname: demo
     image: odoopbx/demo:${ODOO_VERSION:-15.0}
-    extra_hosts:
-      - odoo:127.0.0.1
-      - asterisk:127.0.0.1
-      - agent:127.0.0.1
-    ports:
-      # Odoo HTTP interface http://localhost:8080/web
-      - 0.0.0.0:8080:8072
-      # Nginx HTTPS proxy for Odoo https://localhost/web
-      - 0.0.0.0:443:443
-      # Salt listener for asterisk CLI
-      - 0.0.0.0:30000:30000
-      # Asterisk SIP UDP transport (pjsip.conf)
-      - 0.0.0.0:65060:65060/udp
-      # Asterisk RTP media ports (rtp.conf)
-      - 0.0.0.0:10100-10200:10100-10200/udp
-      # Asterisk WSS port for WebRTC (http.conf)
-      - 0.0.0.0:8089:8089
+    network_mode: host
+    # Required to manage host's ipsets (if reactor is enabled).
+    privileged: true
+    volumes:
+      - asterisk_etc:/etc/asterisk
+      - db_data:/var/lib/postgresql
+      - odoo_data:/var/lib/odoo
+      - ./minion_local.conf:/etc/salt/minion_local.conf
 
   db:
     hostname: db
@@ -58,6 +49,7 @@ services:
     privileged: true
     volumes:
       - asterisk_etc:/etc/asterisk
+      - ./minion_local.conf:/etc/salt/minion_local.conf
     environment:
       - ODOO_DB
       - ASTERISK_AUTOSTART=false
