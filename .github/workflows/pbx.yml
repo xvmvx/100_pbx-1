@@ -4,8 +4,7 @@ on:
     branches:
       - master
     paths:
-      - salt/asterisk/**
-      - salt/agent/**
+      - salt/**
       - docker/pbx/**
       - .github/workflows/pbx.yml
 
