@@ -7,3 +7,4 @@ odoo:
   conf_path: /etc/odoo/odoo.conf
   force_update: False
   force_config_update: False
+  initdb_options: --without-demo=all

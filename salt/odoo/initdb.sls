@@ -11,7 +11,7 @@ odoo-init-base:
   cmd.run:
     - name: >
         {{ odoo.src_path }}/odoo-bin -c {{ odoo.conf_path }} -d {{ odoo.db }}
-        --no-http --stop-after-init  -i base
+        --no-http --stop-after-init  -i base {{ odoo.initdb_options }}
     - runas: {{ odoo.user }}
     - shell: /bin/bash
     - unless: >

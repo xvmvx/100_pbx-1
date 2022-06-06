@@ -4,7 +4,7 @@ include:
   - asterisk
   - postgres
   - odoo
-  - odoo.config
+  - odoo.initdb
   - nginx
 {% else %}
 not-yet-supported:
