@@ -7,6 +7,8 @@ services:
     # healthcheck example
     healthcheck:
       test: wget -q -O - http://localhost:8072/asterisk_plus/asterisk_ping?dbname=$$ODOO_DB | grep -q Success
+    volumes:
+      - ./minion_local.conf:/etc/salt/minion_local.conf
 
   odoo:
     volumes:
@@ -21,6 +23,8 @@ services:
     environment:
       - ASTERISK_AUTOSTART=true
     restart: unless-stopped
+    volumes:
+      - ./minion_local.conf:/etc/salt/minion_local.conf
 
   freepbx:
     ports:

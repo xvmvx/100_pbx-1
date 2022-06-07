@@ -11,7 +11,6 @@ services:
       - asterisk_etc:/etc/asterisk
       - db_data:/var/lib/postgresql
       - odoo_data:/var/lib/odoo
-      - ./minion_local.conf:/etc/salt/minion_local.conf
 
   db:
     hostname: db

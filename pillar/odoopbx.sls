@@ -105,7 +105,7 @@ nginx:
                       - 'snippets/websocket.conf'
                       - 'snippets/proxy_headers.conf'
               - location /console:
-                  - proxy_pass: http://agent:30000
+                  - proxy_pass: http://localhost:30000
                   - rewrite /console(.*) /$1 break
                   - include:
                       - 'snippets/websocket.conf'
