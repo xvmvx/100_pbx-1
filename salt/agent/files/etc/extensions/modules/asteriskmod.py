@@ -281,7 +281,7 @@ def update_access_rules(rules):
     return True
 
 
-def tts_create_sound(result_file_name,
+def tts_create_sound(result_file,
                      text,
                      language='en-US',
                      voice='en-US-Wavenet-A',
@@ -300,7 +300,7 @@ def tts_create_sound(result_file_name,
         return
     if not tts_key_file_path:
         tts_key_file_path = __salt__['config.get'](
-            'tts_google_key_file', '/srv/odoopbx/google_key.json')
+            'tts_google_key_file', '/etc/google_tts_key.json')
     if not os.path.isfile(tts_key_file_path):
         raise Exception('File {} not found'.format(tts_key_file_path))
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = tts_key_file_path
@@ -321,8 +321,9 @@ def tts_create_sound(result_file_name,
     if not result_file_dir:
         result_file_dir = __salt__['config.get']('asterisk_sounds_dir',
                                                  '/var/lib/asterisk/sounds')
+    suffix = 'wav' if result_file[-4:] != '.wav' else ''
     file_path = os.path.join(
-        result_file_dir, '{}.wav'.format(result_file_name))
+        result_file_dir, '{}.{}'.format(result_file, suffix))
     if not os.path.isdir(os.path.dirname(file_path)):
         log.warning('tts_create_sound: creating %s', os.path.dirname(file_path))
         os.makedirs(os.path.dirname(file_path))
