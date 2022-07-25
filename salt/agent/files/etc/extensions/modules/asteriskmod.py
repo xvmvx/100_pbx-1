@@ -288,11 +288,11 @@ def tts_create_sound(result_file,
                      pitch=0,
                      speaking_rate=1,
                      tts_key_file_path=None,
-                     result_file_dir=None):
+                     result_file_folder=None):
     """
     Crate sound file from text.
 
-    CLI example: salt-call asterisk.tts_create_sound hello_world 'Hello world!' language='en-US' voice='en-US-Wavenet-A'  pitch=0 speaking_rate=1 tts_key_file_path=/srv/odoopbx/google_key.json result_file_dir='/var/lib/asterisk/sounds'
+    CLI example: salt-call asterisk.tts_create_sound hello_world 'Hello world!' language='en-US' voice='en-US-Wavenet-A'  pitch=0 speaking_rate=1 tts_key_file_path=/etc/google_tts_key.json result_file_folder='/var/lib/asterisk/sounds'
     You can fine hello_world.wav /var/lib/asterisk/sounds folder.
     """
     if not HAS_TTS_LIBS:
@@ -318,12 +318,12 @@ def tts_create_sound(result_file,
     response = client.synthesize_speech(
         input=synthesis_input, voice=voice, audio_config=audio_config)
     # The response's audio_content is binary.
-    if not result_file_dir:
-        result_file_dir = __salt__['config.get']('asterisk_sounds_dir',
+    if not result_file_folder:
+        result_file_folder = __salt__['config.get']('asterisk_sounds_dir',
                                                  '/var/lib/asterisk/sounds')
     suffix = 'wav' if result_file[-4:] != '.wav' else ''
     file_path = os.path.join(
-        result_file_dir, '{}.{}'.format(result_file, suffix))
+        result_file_folder, '{}.{}'.format(result_file, suffix))
     if not os.path.isdir(os.path.dirname(file_path)):
         log.warning('tts_create_sound: creating %s', os.path.dirname(file_path))
         os.makedirs(os.path.dirname(file_path))

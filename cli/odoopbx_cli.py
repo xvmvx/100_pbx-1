@@ -161,11 +161,11 @@ def start(service, after):
                     break
                 listener.ok()
         res = subprocess.check_output(f'{servicectlmap[init]} start {service}', shell=True)
+        click.echo(res)
     except subprocess.CalledProcessError as e:
         click.secho(f'Error: {e}', err=True, fg='red')
     except json.decoder.JSONDecodeError as e:
-        click.secho(f'Error: {e}', err=True, fg='red')
-    click.echo(res)
+        click.secho(f'Error: {e}', err=True, fg='red')    
 
 @main.command(help='Stop a service.')
 @click.argument('service')
@@ -175,11 +175,11 @@ def stop(service):
         init = subprocess.check_output('salt-call --local --out=json grains.get init', shell=True)
         init = json.loads(init)['local']
         res = subprocess.check_output(f'{servicectlmap[init]} stop {service}', shell=True)
+        click.echo(res)
     except subprocess.CalledProcessError as e:
         click.secho(f'Error: {e}', err=True, fg='red')
     except json.decoder.JSONDecodeError as e:
-        click.secho(f'Error: {e}', err=True, fg='red')
-    click.echo(res)
+        click.secho(f'Error: {e}', err=True, fg='red')    
 
 
 @main.group(help='Show information.')
