@@ -7,10 +7,6 @@ services:
     network_mode: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
-    volumes:
-      - asterisk_etc:/etc/asterisk
-      - db_data:/var/lib/postgresql
-      - odoo_data:/var/lib/odoo
 
   db:
     hostname: db
@@ -48,7 +44,6 @@ services:
     privileged: true
     volumes:
       - asterisk_etc:/etc/asterisk
-      - ./minion_local.conf:/etc/salt/minion_local.conf
     environment:
       - ODOO_DB
       - ASTERISK_AUTOSTART=false
