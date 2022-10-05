@@ -20,7 +20,6 @@ log = logging.getLogger(__name__)
 TYPESCRIPT_PATH = '/var/log/odoopbx-install-'+datetime.now().__format__('%s')+'.log'
 SALT_PATH = '/etc/salt'
 MINION_LOCAL_CONF = 'minion_local.conf'
-ODOOPBX_MASTER = 'master.odoopbx.com:44506'
 
 
 def _config_load():
@@ -195,11 +194,13 @@ def show_version():
 
 @show.command(help='Show system status.', name='report')
 def show_report():
-    # Print LISTENING ports
     STARS = '*' * 20
+    click.secho('{} SALT VERSIONS {}'.format(STARS, STARS), bold=True)
+    os.system('salt-call --local --versions')
+    click.secho('{} SALT GRAINS {}'.format(STARS, STARS), bold=True)
+    os.system('salt-call --local grains.items')
     click.secho('{} NETWORK PORTS {}'.format(STARS, STARS), bold=True)
     os.system('netstat -atnup | grep LISTEN')
-    # Print running python processes
     click.secho('{} PYTHON PROCS {}'.format(STARS, STARS), bold=True)
     os.system('ps auxw | grep python')
 

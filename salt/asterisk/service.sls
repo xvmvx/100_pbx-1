@@ -45,4 +45,5 @@ asterisk-running:
   service.running:
     - name: asterisk
     - enable: True
+    - onlyif: runlevel
 {% endif %}

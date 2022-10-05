@@ -14,6 +14,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y insta
 # Install Asteirsk and Agent
 COPY ./ /opt/agent/
 RUN pip3 install /opt/agent/ \
+    && odoopbx show report \
     && odoopbx install agent \
     && odoopbx install asterisk \
     && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
