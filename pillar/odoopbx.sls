@@ -21,6 +21,10 @@ nginx:
     server_available: /etc/nginx/conf.d
     server_enabled: /etc/nginx/conf.d
   install_from_repo: true
+  service:
+    opts:
+      onlyif:
+        - runlevel
   package:
     opts: {}
   snippets:
