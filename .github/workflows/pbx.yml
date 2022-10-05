@@ -4,6 +4,7 @@ on:
     branches:
       - master
     paths:
+      - pillar/**
       - salt/**
       - docker/pbx/**
       - .github/workflows/pbx.yml
