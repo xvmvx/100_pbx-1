@@ -6,5 +6,4 @@ agent:
     - iptables
     - logrotate
     - python3-m2crypto
-  pypi_pkgs:
-    - psutil
+  pypi_pkgs: []
