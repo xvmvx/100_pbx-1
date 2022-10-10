@@ -1,4 +1,5 @@
 agent:
+  python: python3
   log_file: "none"
   running: False
   pkgs:

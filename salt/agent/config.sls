@@ -2,7 +2,7 @@
 
 agent-generate-minion-id:
   cmd.run:
-    - name: python -c 'import uuid; open("/etc/salt/minion_id","w").write(str(uuid.uuid4()))'
+    - name: {{ agent.python }} -c 'import uuid; open("/etc/salt/minion_id","w").write(str(uuid.uuid4()))'
     - unless: test "`cat /etc/salt/minion_id | wc -c`" = "36"
 
 agent-etc-files:

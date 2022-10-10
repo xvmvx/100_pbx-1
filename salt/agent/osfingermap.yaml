@@ -25,6 +25,7 @@ CentOS Linux-8:
     - swig
   pypi_pkgs: []
 Sangoma Linux-7:
+  python: python3.6
   pkgs:
     - ipset
     - iptables
