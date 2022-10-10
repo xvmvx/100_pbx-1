@@ -17,6 +17,14 @@ agent-pkg-reqs:
     - refresh: true
 {% endif %}
 
+{% if grains.osfinger in ['Sangoma Linux-7',] %}
+agent-pip-upgrade:
+  pip.installed:
+    - name: pip
+    - upgrade: True
+    - reload_modules: True
+{% endif %}
+
 agent-pip-reqs:
   pip.installed:
     - pkgs:
@@ -33,16 +41,7 @@ agent-pip-reqs:
       {%- endfor %}
     - require:
       - agent-pkg-reqs
-    - retry:
-        attempts: 2
     - reload_modules: True
-
-agent-pip-upgrade:
-  cmd.run:
-    - name: pip3 install --upgrade pip
-    - reload_modules: true
-    - onfail:
-      - agent-pip-reqs
 
 agent-locale:
   locale.present:

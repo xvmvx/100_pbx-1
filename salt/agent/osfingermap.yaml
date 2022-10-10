@@ -31,7 +31,6 @@ Sangoma Linux-7:
     - logrotate
     - swig
     - openssl-devel
-    - python36u-devel
     - gcc
   pypi_pkgs:
     - M2Crypto
