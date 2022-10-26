@@ -108,12 +108,8 @@ def start():
     http_server = salt.ext.tornado.httpserver.HTTPServer(
         app, ssl_options=ssl_options)
     http_server.listen(asterisk_cli_port, address=asterisk_cli_listen_address)
-    try:
-        if not io_loop._running:
-            io_loop.start()
-    finally:
-        term_manager.shutdown()
-
+    if not io_loop._running:
+        io_loop.start()
 
 if __name__ == '__main__':
     logging.basicConfig(
