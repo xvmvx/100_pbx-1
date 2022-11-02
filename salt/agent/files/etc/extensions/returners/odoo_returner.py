@@ -16,5 +16,5 @@ def returner(ret):
         'model': 'asterisk_plus.salt_job',
         'method': 'returner',
         'args': [ret]
-    }, 'odoo_execute')
+    }, 'odoo_execute/new')
     log.debug('Return has been sent to Odoo: %s', ret)

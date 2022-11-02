@@ -18,12 +18,10 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 TYPESCRIPT_PATH = '/var/log/odoopbx-install-'+datetime.now().__format__('%s')+'.log'
-SALT_PATH = '/etc/salt'
-MINION_LOCAL_CONF = 'minion_local.conf'
+CONFIG_PATH = '/etc/salt/odoopbx/minion.conf'
 
 
-def _config_load():
-    config_path = os.path.join(SALT_PATH, MINION_LOCAL_CONF)
+def _config_load(config_path=CONFIG_PATH):
     try:
         config = yaml.load(open(config_path), yaml.SafeLoader)
         if not config:
@@ -33,8 +31,7 @@ def _config_load():
     return config
 
 
-def _config_save(config, dest=MINION_LOCAL_CONF):
-    config_path = os.path.join(SALT_PATH, dest)
+def _config_save(config, config_path=CONFIG_PATH):
     open(config_path, 'w').write(
         yaml.dump(config, default_flow_style=False, indent=2))
 
@@ -87,20 +84,24 @@ def config():
 
 @config.command(name='get')
 @click.argument('option')
-@click.option('--local', is_flag=True, help=f'Search the option only in {MINION_LOCAL_CONF}')
+@click.option(
+    '--local', is_flag=True, help=f'Search the option only in {CONFIG_PATH}')
 def config_get(option, local):
     """
     Retreive the value in JSON of a configuration option
     """
     if not local:
         #--local here is about not connecting master
-        value = subprocess.check_output(f'salt-call --local --out=json config.get {option}', shell=True)
+        value = subprocess.check_output(
+            f'salt-call --local --out=json config.get {option}', shell=True)
         value = json.loads(value)
         click.echo(json.dumps(value['local']))
     else:
         config = _config_load()
         if option not in config:
-            click.secho(f'Error: option {option} not found in {MINION_LOCAL_CONF}', err=True, fg='red')
+            click.secho(
+                f'Error: option {option} not found in {CONFIG_PATH}',
+                err=True, fg='red')
             exit(4)
         click.echo(json.dumps(config[option]))
 
@@ -130,12 +131,12 @@ def config_set(option, value):
     _config_save(config)
 
 
-@config.command(name='del', help=f"Delete a configuration option from {MINION_LOCAL_CONF}")
+@config.command(name='del', help=f"Delete a configuration option from {CONFIG_PATH}")
 @click.argument('option')
 def config_del(option):
     config = _config_load()
     if option not in config:
-        click.echo(f'Option {option} not present in {MINION_LOCAL_CONF}, nothing to delete.')
+        click.echo(f'Option {option} not present in {CONFIG_PATH}, nothing to delete.')
         return
     del config[option]
     _config_save(config)

@@ -92,7 +92,6 @@ class AmiClient:
                     'search_read',
                     [[['is_enabled', '=', True], ['source', '=', 'AMI']]],
                     {'fields': ['name','model', 'method', 'delay', 'condition']},
-                    log_error=True
                 )
                 if not events_map:
                     log.error('Cannot download the events map, retrying...')
@@ -124,7 +123,7 @@ class AmiClient:
                 'method': event['method'],
                 'args': json.loads(event['args']),
                 'kwargs': json.loads(event.get('kwargs', "{}")),
-            }, 'odoo_execute')
+            }, 'odoo_execute/new')
             log.info('Event OdooExecute has been sent to Odoo')
         # Send the event to Odoo if required
         asyncio.ensure_future(self.send_event_to_odoo(event), loop=self.loop)
@@ -180,7 +179,7 @@ class AmiClient:
                 'model': handler['model'],
                 'method': handler['method'],
                 'args': [event]
-            }, 'odoo_execute')
+            }, 'odoo_execute/new')
             log.debug('Event %s has been sent to Odoo', event_name)
         except Exception as e:
             log.error('Event %s handler failure: %s', event_name, e)

@@ -1,8 +1,4 @@
 ###
-# Include master_*.conf in Salt config directory to override defaults or add new params.
-include: 'master_*.conf'
-
-###
 # Salt master listen address.
 interface: 127.0.0.1
 
@@ -23,7 +19,7 @@ file_roots:
 
 external_auth:
   file:
-    ^filename: /etc/salt/auth
+    ^filename: /etc/salt/odoopbx/auth
     ^filetype: text
     ^hashtype: md5
     ^field_separator: '|'

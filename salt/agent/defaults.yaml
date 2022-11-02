@@ -1,6 +1,6 @@
 agent:
   python: python3
-  log_file: "none"
+  log_file: ""
   running: False
   pkgs:
     - ipset

@@ -1,7 +1,6 @@
 import logging
-import os
-from salt.utils import json
-import time
+import uuid
+from salt.utils import json, event
 
 __virtualname__ = 'odoo'
 
@@ -14,6 +13,7 @@ except ImportError:
 
 log = logging.getLogger(__name__)
 
+TAG='odoo_execute'
 
 def __virtual__():
     '''
@@ -31,67 +31,28 @@ def ping():
     return 'pong'
 
 
-def _get_odoo(host=None, port=None, user=None, password=None, db=None,
-              protocol=None):
-    """
-    This is helper function to login into Odoo and share the connection.
-    """
-    odoo = __context__.get('odoo_client')
-    if not odoo:
-        # Set connection options.
-        if not host:
-            host = __salt__['config.get']('odoo_host', 'localhost')
-        if not port:
-            port = int(__salt__['config.get']('odoo_port', 8069))
-        if not db:
-            # Get database from ENV or config.
-            db = os.environ.get('ODOO_DB',
-                __salt__['config.get']('odoo_db', 'demo'))
-        if not user:
-            user = __salt__['config.get']('odoo_user', 'admin')
-        if not password:
-            password = __salt__['config.get']('odoo_password', 'admin')
-        if not protocol:
-            protocol = 'jsonrpc+ssl' if __salt__['config.get'](
-                'odoo_use_ssl') else 'jsonrpc'
-        # Create an OdooRPC object and login.
-        odoo = odoorpc.ODOO(host, port=port, protocol=protocol)
-        odoo.login(db, user, password)
-        # Keep the connection object in salt context.
-        __context__['odoo_client'] = odoo
-    return odoo
-
-
-def execute(model, method, args, kwargs={}, log_error=True):
+def execute(model, method, args=[], kwargs={}, timeout=5):
     """
     Execute Odoo method.
 
     CLI example: odoo.execute res.partner search '[[["name","ilike","admin"]]]'
     """
-    # Trace request / response
-    if __salt__['config.get']('odoo_trace_rpc'):
-        # Hack not to trace file operations is it makes screen not readable
-        if method == 'call_recording_data':
-            log.info('Odoo execute: %s.%s', model, method)
-        else:
-            log.info('Odoo execute: %s.%s %s %s', model, method, args, kwargs)
-    else:
-        log.debug('Odoo execute: %s.%s %s %s', model, method, args, kwargs)
-    # Try to parse args
-    if type(args) is str:
-        args = json.loads(args)
-    args = tuple(args)
+    reply_tag = uuid.uuid4().hex
+    event_bus = event.MinionEvent(__opts__)
+    event_bus.fire_event({
+        'model': model,
+        'method': method,
+        'args': args,
+        'kwargs': kwargs,
+        '_reply_tag': reply_tag}, TAG+'/new')
     try:
-        odoo = _get_odoo()
-        res = getattr(odoo.env[model], method)(*args, **kwargs)
-        if __salt__['config.get']('odoo_trace_rpc'):
-            log.info('Odoo result: %s', res)
-        return res
+        res = event_bus.get_event(
+            no_block=False, full=True, wait=timeout,
+            tag=TAG+'/ret/'+reply_tag)
     except Exception as e:
-        if log_error:
-            log.error('Odoo RPC %s.%s error: %s', model, method, e)
-        if __salt__['config.get']('odoo_raise_exception', False):
-            raise
+        log.error('Odoo RPC %s.%s error: %s', model, method, e)
+    if 'data' in res and 'result' in res['data']:
+        return res['data']['result']
 
 
 def notify_user(uid, message, title='Notification',
@@ -100,16 +61,9 @@ def notify_user(uid, message, title='Notification',
     Send notification to Odoo user by his uid.
 
     CLI examples:
-        salt asterisk odoo.notify_user 2 'Hello admin!'
-        salt asterisk odoo.notify_user 2 'Error' warning=True sticky=True
+        odoo.notify_user 2 'Hello admin!'
+        odoo.notify_user 2 'Error' warning=True sticky=True
     """    
-    log.debug('Notify user %s: %s', uid, message)
-    odoo = _get_odoo()
-    __salt__['odoo.execute'](
-        'asterisk_common.settings', 'bus_sendone',
-        ['remote_agent_notification_{}'.format(uid), {
-            'message': message,
-            'warning': warning,
-            'sticky': sticky,
-            'title': title
-        }])
+    execute('res.users', 'asterisk_plus_notify', [message, title, uid], {
+        'warning': warning,
+        'sticky': sticky})

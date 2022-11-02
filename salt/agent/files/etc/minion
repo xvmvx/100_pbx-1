@@ -1,5 +1,5 @@
-# Options from minion_*.conf in Salt config directory take precedence
-include: 'minion_*.conf'
+# Options from odoopbx/minion.conf in Salt config directory take precedence
+include: 'odoopbx/minion.conf'
 
 master: localhost
 
