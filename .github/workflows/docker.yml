@@ -1,4 +1,4 @@
-name: PBX
+name: Docker
 on:
   push:
     branches:
@@ -6,8 +6,8 @@ on:
     paths:
       - pillar/**
       - salt/**
-      - docker/pbx/**
-      - .github/workflows/pbx.yml
+      - docker/**
+      - .github/workflows/docker.yml
 
 jobs:
   Build:
@@ -21,8 +21,8 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./docker/pbx/Dockerfile
+          file: ./docker/Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/pbx:1.0
-            ${{ github.repository_owner }}/pbx:latest
+            ${{ github.repository_owner }}/agent:1.0
+            ${{ github.repository_owner }}/agent:latest

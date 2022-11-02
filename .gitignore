@@ -9,8 +9,7 @@ pillar/local.sls
 build/
 dist/
 docker/docker-compose.override.yml
-docker/minion_local.conf
-docker/master_local.conf
+docker/odoopbx/
 docker/asterisk
 docker/odoo/
 docker/odoo.conf

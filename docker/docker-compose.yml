@@ -1,16 +1,10 @@
 version: '3.1'
 services:
 
-  demo:
-    hostname: demo
-    image: odoopbx/demo:${ODOO_VERSION:-15.0}
-    network_mode: host
-    # Required to manage host's ipsets (if reactor is enabled).
-    privileged: true
-
   db:
     hostname: db
-    image: postgres:12
+    container_name: db
+    image: postgres:13
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
@@ -18,8 +12,10 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+
   odoo:
-    hostname: odoo
+    hostname: odoo-${ODOO_VERSION:-15.0}
+    container_name: odoo-${ODOO_VERSION:-15.0}
     depends_on:
       - db
     image: odoopbx/odoo:${ODOO_VERSION:-15.0}
@@ -28,44 +24,30 @@ services:
     - HOST=db
     - USER=odoo
     - PASSWORD=odoo
-    - DATABASE=${ODOO_DB:-odoopbx_15}
+    - DATABASE=odoopbx_${ODOO_VERSION:-15.0}
     - ODOO_VERSION
     volumes:
       - odoo_data:/var/lib/odoo
     ports:
       # Odoo HTTP longpolling port http://localhost:8072/web
-      - 0.0.0.0:8072:8072
+      - 0.0.0.0:8072:8072/tcp
+      - 0.0.0.0:8069:8069/tcp
 
-  pbx:
-    hostname: pbx
-    image: odoopbx/pbx
+  agent:
+    hostname: agent
+    container_name: agent
+    image: odoopbx/agent
     network_mode: host
     # Required to manage host's ipsets (if reactor is enabled).
     privileged: true
     volumes:
       - asterisk_etc:/etc/asterisk
+      - ./odoopbx:/etc/salt/odoopbx
     environment:
-      - ODOO_DB
-      - ASTERISK_AUTOSTART=false
-
-  freepbx:
-    hostname: freepbx
-    # https://hub.docker.com/r/tiredofit/freepbx. See also:
-    # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
-    image: tiredofit/freepbx
-    cap_add:
-      - NET_ADMIN
-    privileged: True
-    volumes:
-      - freepbx_data:/data
-      - freepbx_db:/var/lib/mysql
-    environment:
-      - DB_EMBEDDED=TRUE
+      - ODOO_URL=http://127.0.0.1:8069/?db=odooagent_${ODOO_VERSION:-15.0}
 
 
 volumes:
   odoo_data:
   db_data:
   asterisk_etc:
-  freepbx_db:
-  freepbx_data:

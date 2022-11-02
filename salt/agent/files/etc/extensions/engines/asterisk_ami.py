@@ -2,6 +2,7 @@
 This is Asterisk PBX Salt module
 '''
 from __future__ import absolute_import, print_function, unicode_literals
+import os
 import asyncio
 from aiorun import run
 import concurrent.futures
@@ -47,9 +48,10 @@ class AmiClient:
         self.loop = asyncio.get_event_loop()
         # Create event loop to receive actions as events.
         self.loop.create_task(self.action_event_loop())
-        host = __salt__['config.get']('ami_host', 'localhost')
-        port = int(__salt__['config.get']('ami_port', '5038'))
-        login = __salt__['config.get']('ami_login', 'salt')
+        host = os.environ.get('AMI_HOST') or __opts__.get('ami_host', '127.0.0.1')
+        port = os.environ.get('AMI_PORT') or __opts__.get('ami_port', '5038')
+        login = os.environ.get('AMI_LOGIN') or __opts__.get('ami_login', 'odoo')
+        secret = os.environ.get('AMI_SECRET') or __opts__.get('ami_secret', 'odoo')
         ping_interval = __salt__['config.get']('ami_ping_interval', 10)
         self.manager = Manager(
             loop=self.loop,
@@ -57,7 +59,7 @@ class AmiClient:
             port=port,
             username=login,
             ping_interval=ping_interval,
-            secret=__salt__['config.get']('ami_secret', 'stack'),
+            secret=secret,
             on_disconnect=self.on_disconnect,
         )
         log.info('AMI connecting to %s@%s:%s...', login, host, port)

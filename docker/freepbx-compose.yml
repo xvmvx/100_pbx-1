@@ -1,0 +1,59 @@
+version: '3.1'
+services:
+
+  odoopbx:
+    hostname: odoopbx
+    container_name: odoopbx
+    image: odoopbx/demo
+    network_mode: host
+    # Required to manage host's ipsets (if reactor is enabled).
+    privileged: true
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - odoo_data:/var/lib/odoo
+      - asterisk_etc:/etc/asterisk
+      - ./odoopbx:/etc/salt/odoopbx
+    environment:
+      - ASTERISK_AUTOSTART=false
+      - ODOO_URL=http://127.0.0.1:8069/?db=demo_15.0
+      - AMI_LOGIN=admin
+      - AMI_SECRET=admin
+
+  freepbx:
+    hostname: freepbx
+    container_name: freepbx
+    # https://hub.docker.com/r/tiredofit/freepbx. See also:
+    # https://github.com/tiredofit/docker-freepbx/blob/15/examples/docker-compose.yml
+    image: tiredofit/freepbx
+    network_mode: host
+    privileged: True
+    volumes:
+      - freepbx_data:/data
+      - freepbx_db:/var/lib/mysql
+    ports:
+      - 8008:80
+      - 8043:443
+    volumes:
+      - ./freepbx/certs:/certs
+      #- ./logs:/var/log
+      #- ./data/www:/var/www/html
+    environment:
+      - DB_EMBEDDED=TRUE
+      - VIRTUAL_HOST=demo.odoopbx.com
+      - ENABLE_SSL=TRUE
+      - LETSENCRYPT_HOST=demo.odoopbx.com
+      - LETSENCRYPT_EMAIL=LETSENCRYPT_EMAIL@gmail.com
+      #- RTP_START=18000
+      #- RTP_FINISH=18100
+      ### If you are using TLS Support for Apache to listen on 443 in the container drop them in /certs and set these:
+      #- TLS_CERT=cert.pem
+      #- TLS_KEY=key.pem
+
+
+
+volumes:
+  odoo_data:
+  db_data:
+  asterisk_etc:
+  freepbx_db:
+  freepbx_data:

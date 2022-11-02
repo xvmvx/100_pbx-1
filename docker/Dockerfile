@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
-ENV MINION_AUTOSTART=true ASTERISK_AUTOSTART=true
+ENV MINION_AUTOSTART=true
+ENV ASTERISK_AUTOSTART=true
 
 # Install prerequisites
 # jinja==3.0.3 until next release salt-3004.2
@@ -19,5 +20,5 @@ RUN pip3 install /opt/agent/ \
     && odoopbx install asterisk \
     && mv /usr/src/asterisk/configs/samples/ /etc/asterisk/ && rm -rf /usr/src/asterisk
 
-COPY ./docker/pbx/supervisord.conf /etc/supervisor/supervisord.conf
+COPY ./docker/supervisord.conf /etc/supervisor/supervisord.conf
 CMD ["/usr/bin/supervisord"]
