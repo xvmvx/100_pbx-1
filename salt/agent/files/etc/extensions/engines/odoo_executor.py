@@ -52,8 +52,14 @@ class OdooExecutor:
         except Exception as e:
             log.error('Initialize exception: {}'.format(e))
             return
-        if not 'result' in res:
-            log.error('Initialize failed: {}'.format(res))
+        if 'error' in res:
+            if 'message' in res['error']:
+                log.error('Initialize error: {}'.format(res['error']['message']))
+            else:
+                log.error('Initialize error: {}'.format(res['error']))
+            return
+        elif not 'result' in res:
+            log.error('Initialize no result: {}'.format(res))
             return
         elif 'error' in res['result']:
             log.error('Initialize error: {}'.format(res['result']['error']))
@@ -66,6 +72,7 @@ class OdooExecutor:
             cli._config_save(running_config)
             open('/etc/salt/odoopbx/auth', 'w').write(
                 'odoo|'+hashlib.md5(new_password.encode('utf-8')).hexdigest())
+            log.info('Initialize Success')
 
 
     def connect(self, url):
@@ -87,6 +94,9 @@ class OdooExecutor:
             except Exception as e:
                 log.error('Cannot connect to Odoo: %s', e)
                 time.sleep(1)
+                if 'Access Denied' in str(e):
+                    time.sleep(30)
+                    self._initialize(url)
 
 
     async def start(self):
