@@ -134,11 +134,8 @@ def put_config(file, data):
     return res
 
 
-def delete_config(files):
-    if type(files) is not list:
-        files = list(files)
-    for file in files:
-        delete_file(os.path.join(_get_etc_dir(), file))
+def delete_config(file):
+    delete_file(os.path.join(_get_etc_dir(), file))
     return True
 
 
