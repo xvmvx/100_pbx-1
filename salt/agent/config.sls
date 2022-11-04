@@ -13,6 +13,7 @@ agent-etc-files:
         - exclude_pat:
           - minion
           - master
+          - E@__pycache__
 
 agent-conf-files:
   file.managed:

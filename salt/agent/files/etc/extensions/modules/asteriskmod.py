@@ -100,7 +100,7 @@ def put_file(path, data):
     """
     Save a local file from data.
     """
-    log.info('Download from Odoo file %s.', path)
+    log.info('Receive from Odoo file %s.', path)
     open(path, 'wb').write(base64.b64decode(data.encode()))
     return True
 

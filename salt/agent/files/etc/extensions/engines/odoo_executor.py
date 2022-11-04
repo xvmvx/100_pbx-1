@@ -13,6 +13,7 @@ import salt.utils.process
 import requests
 import uuid
 import hashlib
+import copy
 from salt.utils import json
 from urllib import parse
 from odoopbx import cli
@@ -162,9 +163,20 @@ class OdooExecutor:
         method = data.get('method')
         args = data.get('args', [])
         kwargs = data.get('kwargs', {})
-        if self.odoo_trace_rpc:
-            log.info('Odoo execute: %s', data)
+        # Print request if enabled. Returner has it's own log message
+        if self.odoo_trace_rpc and method != 'returner':
+            # Suppress file_data contents in logger
+            cut_args = copy.deepcopy(args)
+            try:
+                if 'file_data' in args[0]['return']:
+                    cut_args[0]['return']['file_data'] = '***'
+            except:
+                pass
+            finally:
+                log.info('%s.%s %s %s', model, method, cut_args, kwargs)
+        # Execute Odoo method
         res = self.odoo.execute_kw(model, method, args, kwargs)
+        # Print result if enabled
         if self.odoo_trace_rpc:
             log.info('Odoo execute result: %s', res)
         return res
