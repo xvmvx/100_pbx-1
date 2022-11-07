@@ -112,7 +112,6 @@ def delete_file(path):
 
 
 def get_file(path):
-    log.info('Upload to Odoo file %s.', path)
     file_data = open(path, 'rb').read()
     return {
         'file_data': base64.b64encode(file_data).decode(),
@@ -125,6 +124,7 @@ def _get_etc_dir():
 
 
 def get_config(file):
+    log.info('Upload to Odoo file %s.', file)
     res = get_file(os.path.join(_get_etc_dir(), file))
     return res
 

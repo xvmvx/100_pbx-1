@@ -178,7 +178,7 @@ class OdooExecutor:
         res = self.odoo.execute_kw(model, method, args, kwargs)
         # Print result if enabled
         if self.odoo_trace_rpc:
-            log.info('Odoo execute result: %s', res)
+            log.info('Result: %s', res)
         return res
 
 
