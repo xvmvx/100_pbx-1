@@ -1,28 +1,41 @@
 version: '3.1'
+
+
+volumes:
+  odoo_data:
+  db_data:
+  asterisk_etc:
+  freepbx_db:
+  freepbx_data:
+
+
 services:
 
-  db:
-    hostname: db
-    container_name: db
+  odoo-db:
     image: postgres:13
+    container_name: odoo-db
+    hostname: odoo-db
+    restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
-    restart: unless-stopped
+      - EDITOR
     volumes:
       - db_data:/var/lib/postgresql/data
 
   odoo:
-    hostname: odoo-${ODOO_VERSION:-15.0}
-    container_name: odoo-${ODOO_VERSION:-15.0}
-    depends_on:
-      - db
     image: odoopbx/odoo:${ODOO_VERSION:-15.0}
-    command: odoo -d odoopbx_${ODOO_VERSION:-15.0}
+    container_name: odoo-${ODOO_VERSION:-15.0}
+    hostname: odoo-${ODOO_VERSION:-15.0}
+    restart: unless-stopped
+    depends_on:
+      - odoo-db
+    command: odoo -d odoopbx_${ODOO_DB:-odoopbx_15.0}
     environment:
-    - HOST=db
-    - USER=odoo
-    - PASSWORD=odoo
+      - HOST=odoo-db
+      - USER=odoo
+      - PASSWORD=odoo
+      - EDITOR
     volumes:
       - odoo_data:/var/lib/odoo
     ports:
@@ -31,21 +44,61 @@ services:
       - 0.0.0.0:8069:8069/tcp
 
   pbx:
-    hostname: pbx
-    container_name: pbx
     image: odoopbx/pbx
-    # --network=host is recommended for Asterisk
-    network_mode: host
-    # Privileged mode required to manage host's ipsets and iptables
+    container_name: pbx
+    hostname: pbx
     privileged: true
+    network_mode: host
+    restart: unless-stopped
     volumes:
       - asterisk_etc:/etc/asterisk
       - ./odoopbx:/etc/salt/odoopbx
     environment:
-      - ODOO_URL=http://127.0.0.1:8069/?db=odoopbx_${ODOO_VERSION:-15.0}
+      - ODOO_URL=${ODOO_URL:-http://127.0.0.1:8069/?db=odoopbx_15.0}
+      - EDITOR
 
+  # https://hub.docker.com/_/mariadb?tab=tags&page=1&ordering=last_updated
+  freepbx-db:
+    image: mariadb:10.6.10
+    container_name: freepbx-db
+    command: --sql-mode=ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    restart: unless-stopped
+    env_file:
+      - freepbx.env
+    environment:
+    - EDITOR
+    volumes:
+    - freepbx_db:/var/lib/mysql
+    ports:
+      - 127.0.0.1:3306:3306/tcp
 
-volumes:
-  odoo_data:
-  db_data:
-  asterisk_etc:
+  # FreePBX docker image is based on izdock/izpbx-asterisk
+  # with OdooPBX services added on top of it.
+  # Check Dockerfile.freepbx for details
+  freepbx:
+    #image: odoopbx/freepbx
+    image: izodoo
+    container_name: freepbx
+    hostname: ${APP_FQDN:-freepbx}
+    privileged: true
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    depends_on:
+      - freepbx-db
+    env_file:
+      - freepbx.env
+    environment:
+      - EDITOR
+      - ODOO_URL=${ODOO_URL:-http://127.0.0.1:8069/?db=odoopbx_15.0}
+    volumes:
+      - freepbx_data:/data
+      - ./odoopbx:/etc/salt/odoopbx
+    #security_opt:
+    #- seccomp=unconfined
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 32768
+

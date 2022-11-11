@@ -13,5 +13,6 @@ docker/odoopbx/
 docker/asterisk
 docker/odoo/
 docker/odoo.conf
+docker/.env
 odoopbx.egg-info/
 twine.sh

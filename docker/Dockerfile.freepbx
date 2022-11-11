@@ -1,0 +1,22 @@
+# Acknowledgment and appreciation to Ugo Viti <ugo.viti@initzero.it>
+# https://github.com/ugoviti/izpbx for more information
+FROM izdock/izpbx-asterisk:18.16.14
+
+MAINTAINER Sasha Li <sashali@odoopbx.com>
+
+COPY ./ /opt/agent/
+COPY ./docker/supervisord.d/salt-*.ini /etc/supervisord.d/
+
+RUN yum install -y python3-devel \
+        # install usefull utils
+        tmux screen vim telnet ngrep bind9.16-utils \
+    # pip upgrade required in rockylinux
+    && pip3 install -U pip \
+    # the same as `pip3 install odoopbx`
+    && pip3 install /opt/agent \
+    # print-out versions for debugging purposes
+    && odoopbx show report \
+    # install salt-master salt-api salt-minion
+    && odoopbx install agent \
+    # put supervisor configs in place
+    && cp -av ./docker/supervisord.d/salt-*.ini /etc/supervisord.d/
