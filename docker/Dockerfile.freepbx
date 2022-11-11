@@ -19,4 +19,4 @@ RUN yum install -y python3-devel \
     # install salt-master salt-api salt-minion
     && odoopbx install agent \
     # put supervisor configs in place
-    && cp -av ./docker/supervisord.d/salt-*.ini /etc/supervisord.d/
+    && cp -av /opt/agent/docker/supervisord.d/salt-*.ini /etc/supervisord.d/
