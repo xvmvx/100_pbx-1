@@ -4,8 +4,11 @@ FROM izdock/izpbx-asterisk:18.16.14
 
 MAINTAINER Sasha Li <sashali@odoopbx.com>
 
+ENV API_AUTOSTART=true
+ENV MASTER_AUTOSTART=true
+ENV MINION_AUTOSTART=true
+
 COPY ./ /opt/agent/
-COPY ./docker/supervisord.d/salt-*.ini /etc/supervisord.d/
 
 RUN yum install -y python3-devel \
         # install usefull utils

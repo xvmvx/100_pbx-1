@@ -77,8 +77,7 @@ services:
   # with OdooPBX services added on top of it.
   # Check Dockerfile.freepbx for details
   freepbx:
-    #image: odoopbx/freepbx
-    image: izodoo
+    image: odoopbx/freepbx
     container_name: freepbx
     hostname: ${APP_FQDN:-freepbx}
     privileged: true
