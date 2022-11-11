@@ -38,11 +38,20 @@ def __virtual__():
 
 
 class OdooExecutor:
-    def _initialize(self, url):
-        log.info(f'Initialize with {url.geturl()}')
+    def _initialize(self):
+        request_url = parse.urljoin(self.url, 'asterisk_plus/initialize')
+        log.info(f'Initialize with {request_url}')
+        # Get minion's ID
+        self.minion_id = __opts__.get('id')
+        # Try to get timezone only once
+        if self.timezone == None:
+            try:
+                self.timezone = __salt__['timezone.get_zone']()
+            except Exception as e:
+                log.error('Timezone get error: %s', e)
+                self.timezone = False
         # Generate new salt api password
         new_password = str(uuid.uuid4())
-        request_url = parse.urljoin(url.geturl(), 'asterisk_plus/initialize')
         request_data = {
             'db': self.db,
             'id': self.minion_id,
@@ -55,15 +64,15 @@ class OdooExecutor:
             return
         if 'error' in res:
             if 'message' in res['error']:
-                log.error('Initialize error: {}'.format(res['error']['message']))
+                log.error('Initialize error1: {}'.format(res['error']['message']))
             else:
-                log.error('Initialize error: {}'.format(res['error']))
+                log.error('Initialize error2: {}'.format(res['error']))
             return
         elif not 'result' in res:
             log.error('Initialize no result: {}'.format(res))
             return
         elif 'error' in res['result']:
-            log.error('Initialize error: {}'.format(res['result']['error']))
+            log.error('Initialize error3: {}'.format(res['result']['error']))
             return
         elif 'opts' in res['result']:
             self.user = res['result']['opts']['odoo_user']
@@ -76,10 +85,15 @@ class OdooExecutor:
             log.info('Initialize Success')
 
 
-    def connect(self, url):
+    def connect(self):
         while self.loop.is_running():
             if not self.user or not self.password:
-                self._initialize(url)
+                log.info('Odoo user and/or password not specified')
+                if self.url:
+                    self._initialize()
+                else:
+                    log.error('Cannot initialize without odoo_url')
+                    break
             if not self.user or not self.password:
                 time.sleep(10)
                 continue
@@ -97,33 +111,36 @@ class OdooExecutor:
                 time.sleep(1)
                 if 'Access Denied' in str(e):
                     time.sleep(30)
-                    self._initialize(url)
+                    self._initialize()
 
 
     async def start(self):
-        # Get and parse ODOO_URL
-        odoo_url =  os.environ.get('ODOO_URL') or __opts__.get('odoo_url')
-        if not odoo_url:
-            log.error('ODOO_URL undefined')
-            return
-        try:
-            url = parse.urlparse(odoo_url)
-            self.host = url.netloc.split(':')[0]
-            self.db = dict(parse.parse_qsl(url.query))['db']
+        # Get db name from environment or config
+        self.db = os.environ.get('ODOO_DB') or __opts__.get('odoo_db')
+        # Get  ODOO_URL. Example: http://127.0.0.1:8069/?db=dbname
+        self.url =  os.environ.get('ODOO_URL') or __opts__.get('odoo_url')
+        # TimeZone not defined by default
+        self.timezone = None
+        # Get connection parameters
+        if self.url:
+            try:
+                url = parse.urlparse(self.url)
+                self.host = url.netloc.split(':')[0]
+                self.protocol = {
+                    'https': 'jsonrpc+ssl',
+                    'http': 'jsonrpc'}[url.scheme]
+                self.port = url.port or (80 if url.scheme == 'http' else 443)
+                if not self.db:
+                    self.db = dict(parse.parse_qsl(url.query))['db']
+            except Exception as e:
+                log.error('ODOO_URL %s parse error: %s', self.url, e)
+                return
+        else:
+            self.host = __opts__.get('odoo_host', '127.0.0.1')
+            self.port = __opts__.get('odoo_port', '8069')
             self.protocol = {
-                'https': 'jsonrpc+ssl',
-                'http': 'jsonrpc'}[url.scheme]
-            self.port = url.port or (80 if url.scheme == 'http' else 443)
-        except Exception as e:
-            log.error('ODOO_URL %s parse error: %s', odoo_url, e)
-            return
-        # Set minion's ID & timezone.
-        self.minion_id = __opts__.get('id')
-        try:
-            self.timezone = __salt__['timezone.get_zone']()
-        except Exception as e:
-            log.error('Timezone get error: %s', e)
-            self.timezone = None
+                True: 'jsonrpc+ssl',
+                False: 'jsonrpc'}[__opts__.get('odoo_use_ssl', False)]
         # Get Odoo connection options
         self.user = os.environ.get('ODOO_USER') or __opts__.get('odoo_user')
         self.password = os.environ.get('ODOO_PASSWORD') or __opts__.get('odoo_password')
@@ -133,7 +150,7 @@ class OdooExecutor:
         salt.utils.process.appendproctitle(self.__class__.__name__)
         self.loop = asyncio.get_event_loop()
         # Create event loop to receive actions as events.
-        self.connect(url)
+        self.connect()
         await self.execute_event_loop()
 
     async def execute_event_loop(self):

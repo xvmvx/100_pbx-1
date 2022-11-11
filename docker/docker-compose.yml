@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     depends_on:
       - odoo-db
-    command: odoo -d odoopbx_${ODOO_DB:-odoopbx_15.0}
+    command: odoo -d odoopbx_${ODOO_VERSION:-15.0}
     environment:
       - HOST=odoo-db
       - USER=odoo
@@ -54,7 +54,8 @@ services:
       - asterisk_etc:/etc/asterisk
       - ./odoopbx:/etc/salt/odoopbx
     environment:
-      - ODOO_URL=${ODOO_URL:-http://127.0.0.1:8069/?db=odoopbx_15.0}
+      - ODOO_URL=${ODOO_URL:-http://127.0.0.1:8069/}
+      - ODOO_DB=odoopbx_${ODOO_VERSION:-15.0}
       - EDITOR
 
   # https://hub.docker.com/_/mariadb?tab=tags&page=1&ordering=last_updated
