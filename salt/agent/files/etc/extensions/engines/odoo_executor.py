@@ -41,15 +41,6 @@ class OdooExecutor:
     def _initialize(self):
         request_url = parse.urljoin(self.url, 'asterisk_plus/initialize')
         log.info(f'Initialize with {request_url}')
-        # Get minion's ID
-        self.minion_id = __opts__.get('id')
-        # Try to get timezone only once
-        if self.timezone == None:
-            try:
-                self.timezone = __salt__['timezone.get_zone']()
-            except Exception as e:
-                log.error('Timezone get error: %s', e)
-                self.timezone = False
         # Generate new salt api password
         new_password = str(uuid.uuid4())
         request_data = {
@@ -105,6 +96,8 @@ class OdooExecutor:
                     self.host, port=self.port, protocol=self.protocol)
                 self.odoo.login(self.db, self.user, self.password)
                 log.info('Logged into Odoo.')
+                self.odoo.execute_kw('asterisk_plus.server', 'set_minion_data',
+                                     [self.minion_id, self.timezone], {})
                 break
             except Exception as e:
                 log.error('Cannot connect to Odoo: %s', e)
@@ -115,12 +108,18 @@ class OdooExecutor:
 
 
     async def start(self):
+        # Get minion's ID
+        self.minion_id = __opts__.get('id')
         # Get db name from environment or config
         self.db = os.environ.get('ODOO_DB') or __opts__.get('odoo_db')
         # Get  ODOO_URL. Example: http://127.0.0.1:8069/?db=dbname
         self.url =  os.environ.get('ODOO_URL') or __opts__.get('odoo_url')
-        # TimeZone not defined by default
-        self.timezone = None
+        # Try to get timezone
+        try:
+            self.timezone = __salt__['timezone.get_zone']()
+        except Exception as e:
+            log.error('Timezone get error: %s', e)
+            self.timezone = False
         # Get connection parameters
         if self.url:
             try:
